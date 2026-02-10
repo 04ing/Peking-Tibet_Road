@@ -1,0 +1,141 @@
+/* 旅游页面特定样式 */
+.travel-hero {
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=ancient%20Chinese%20road%20through%20mountainous%20terrain%20from%20Beijing%20to%20Tibet%2C%20scenic%20landscape%20with%20traditional%20architecture&image_size=landscape_16_9');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    padding: 100px 0;
+    text-align: center;
+}
+
+.video-section {
+    background-color: #f9f9f9;
+    padding: 60px 0;
+}
+
+.video-container {
+    max-width: 900px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(139, 69, 19, 0.1);
+}
+
+.video-player {
+    width: 100%;
+    height: 500px;
+    border: none;
+    border-radius: 8px;
+}
+
+.travel-guide-section {
+    padding: 60px 0;
+}
+
+.guide-content {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.guide-item {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(139, 69, 19, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.guide-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(139, 69, 19, 0.15);
+}
+
+.guide-item i {
+    font-size: 36px;
+    color: #8B4513;
+    margin-bottom: 20px;
+}
+
+.route-section {
+    background-color: #f9f9f9;
+    padding: 60px 0;
+}
+
+.route-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.route-card {
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(139, 69, 19, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.route-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(139, 69, 19, 0.15);
+}
+
+.route-image {
+    height: 200px;
+    overflow: hidden;
+}
+
+.route-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.route-card:hover .route-image img {
+    transform: scale(1.05);
+}
+
+.route-content {
+    padding: 20px;
+}
+
+.tips-section {
+    padding: 60px 0;
+}
+
+.tips-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.tip-item {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(139, 69, 19, 0.1);
+}
+
+.tip-item i {
+    font-size: 24px;
+    color: #8B4513;
+    margin-bottom: 15px;
+}
+
+@media (max-width: 768px) {
+    .video-player {
+        height: 300px;
+    }
+    
+    .guide-content,
+    .route-cards,
+    .tips-grid {
+        grid-template-columns: 1fr;
+    }
+}

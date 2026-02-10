@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>京藏古道人文环境时空信息开放平台</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 高德地图API -->
+    <!-- 请注册并获取真实的API密钥，替换下面的key值 -->
+    <!-- 注册地址：https://lbs.amap.com/dev/key/app -->
+    <script src="https://webapi.amap.com/maps?v=2.0&key=fe4e50125495ae9967861058e720c5dd"></script>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1>京藏古道人文环境时空信息开放平台</h1>
+                <p>元代北京至西藏的驿路文明</p>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">首页</a></li>
+                    <li><a href="#explore">古道探索</a></li>
+                    <li><a href="#map">地图展示</a></li>
+                    <li><a href="#dataset">数据集</a></li>
+                    <li><a href="culture.html">文化内涵</a></li>
+                    <li><a href="travel.html">旅游攻略</a></li>
+                    <li><a href="#about">关于平台</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 英雄区域 -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h2>探索元代北京至西藏的驿路文明</h2>
+                <p>通过时空信息技术，重现京藏古道的历史风貌与人文环境</p>
+                <a href="#map" class="btn-primary">开始探索</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 平台介绍 -->
+    <section class="intro">
+        <div class="container">
+            <h2>平台简介</h2>
+            <p>京藏古道人文环境时空信息开放平台旨在通过时空信息技术，整合元代北京至西藏驿路的历史文献、考古资料、地理信息等多源数据，构建一个综合性的历史地理信息开放平台。平台将为研究人员、教育工作者和历史爱好者提供丰富的历史地理数据和可视化工具，促进京藏古道历史文化的研究与传承。</p>
+            <div class="features">
+                <div class="feature-item">
+                    <i class="fas fa-map-marked-alt"></i>
+                    <h3>时空地图</h3>
+                    <p>基于历史地理数据，重现元代京藏古道的路线与节点</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-database"></i>
+                    <h3>数据集</h3>
+                    <p>整合历史文献、考古资料、地理信息等多源数据</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-book"></i>
+                    <h3>研究成果</h3>
+                    <p>展示相关研究论文、报告和学术成果</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-users"></i>
+                    <h3>开放共享</h3>
+                    <p>为研究人员和教育工作者提供数据下载和API接口</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 视频播放 -->
+    <section class="video-section">
+        <div class="container">
+            <h2>京藏古道介绍视频</h2>
+            <p>通过视频了解京藏古道的历史文化与自然风光</p>
+            <div class="video-container">
+                <video class="video-player" controls>
+                    <source src="京藏古道介绍视频.mp4" type="video/mp4">
+                    您的浏览器不支持视频播放。
+                </video>
+            </div>
+        </div>
+    </section>
+
+    <!-- 古道探索 -->
+    <section id="explore" class="explore-section">
+        <div class="container">
+            <h2>古道探索</h2>
+            <div class="explore-content">
+                <div class="explore-item">
+                    <div class="explore-icon">
+                        <i class="fas fa-route"></i>
+                    </div>
+                    <h3>古道路线复原与重建</h3>
+                    <p>基于历史文献、考古资料和现代地理信息，对元代京藏古道的路线进行复原与重建，包括主要驿路、支线和重要节点的空间定位与可视化展示。</p>
+                    <a href="route.html" class="btn-secondary">探索路线</a>
+                </div>
+                <div class="explore-item">
+                    <div class="explore-icon">
+                        <i class="fas fa-history"></i>
+                    </div>
+                    <h3>历史事件脉络梳理</h3>
+                    <p>梳理元代北京至西藏驿路上发生的重要历史事件，构建事件时间线，分析事件之间的关联关系，展现京藏古道在历史进程中的重要作用。</p>
+                    <a href="events.html" class="btn-secondary">查看事件</a>
+                </div>
+                <div class="explore-item">
+                    <div class="explore-icon">
+                        <i class="fas fa-monument"></i>
+                    </div>
+                    <h3>线性文化遗产</h3>
+                    <p>识别和保护京藏古道沿线的线性文化遗产，包括驿站遗址、宗教建筑、历史村落等，分析其历史价值和文化意义，促进文化遗产的传承与利用。</p>
+                    <a href="heritage.html" class="btn-secondary">了解遗产</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 地图展示 -->
+    <section id="map" class="map-section">
+        <div class="container">
+            <h2>地图展示</h2>
+            <div class="map-container">
+                <div id="amap-container" class="map-container-amap"></div>
+                <div class="map-controls">
+                    <h3>地图控制</h3>
+                    <div class="control-group">
+                        <label>时间范围：</label>
+                        <select>
+                            <option>元代初期</option>
+                            <option>元代中期</option>
+                            <option>元代晚期</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>图层选择：</label>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="layer-route" checked>
+                            <label for="layer-route">驿路路线</label>
+                            <input type="checkbox" id="layer-station" checked>
+                            <label for="layer-station">驿站</label>
+                            <input type="checkbox" id="layer-landmark">
+                            <label for="layer-landmark">历史地标</label>
+                        </div>
+                    </div>
+                    <a href="http://119.78.100.166/qzlab/Ancient-roads?type=jzgd" class="btn-secondary" target="_blank">查看详细地图</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 数据集 -->
+    <section id="dataset" class="dataset-section">
+        <div class="container">
+            <h2>数据集</h2>
+            <p>平台整合了多种类型的数据集，包括历史文献、考古资料、地理信息等，为研究提供丰富的数据源。</p>
+            <div class="dataset-grid">
+                <div class="dataset-item">
+                    <h3>历史文献</h3>
+                    <p>包括《元史》、《经世大典》等历史文献中关于京藏古道的记载</p>
+                    <a href="dataset-history.html" class="btn-secondary">查看详情</a>
+                </div>
+                <div class="dataset-item">
+                    <h3>地理信息</h3>
+                    <p>基于现代地理信息系统，重建元代京藏古道的地理环境</p>
+                    <a href="dataset-geography.html" class="btn-secondary">查看详情</a>
+                </div>
+                <div class="dataset-item">
+                    <h3>考古资料</h3>
+                    <p>整合沿线考古发现，包括驿站遗址、文物等资料</p>
+                    <a href="dataset-archaeology.html" class="btn-secondary">查看详情</a>
+                </div>
+                <div class="dataset-item">
+                    <h3>影像资料</h3>
+                    <p>包括历史照片、现代影像等可视化资料</p>
+                    <a href="dataset-images.html" class="btn-secondary">查看详情</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 文化内涵 -->
+    <section class="culture-intro-section">
+        <div class="container">
+            <h2>文化内涵</h2>
+            <p>从多个维度深入探索元代北京至西藏驿路的丰富文化遗产，包括文化传播、驿路商贸、驿站寺庙、民族宗教、历史事件、历史人物、知识图谱和历史叙事。</p>
+            <div class="culture-intro-content">
+                <div class="culture-intro-item">
+                    <i class="fas fa-paper-plane"></i>
+                    <h3>文化传播</h3>
+                    <p>京藏古道作为元代连接中原与西藏的重要通道，不仅是政治军事要道，更是文化传播的桥梁。通过这条古道，中原的儒家文化、医学、天文历法等知识传入西藏，而西藏的佛教文化、艺术、哲学也影响了中原地区。</p>
+                </div>
+                <div class="culture-intro-item">
+                    <i class="fas fa-exchange-alt"></i>
+                    <h3>驿路商贸</h3>
+                    <p>京藏古道是元代重要的商贸通道，连接了中原与西藏的经济往来。通过这条古道，中原的丝绸、茶叶、瓷器等商品运往西藏，而西藏的马匹、皮毛、药材等特产也进入中原市场。</p>
+                </div>
+                <div class="culture-intro-item">
+                    <i class="fas fa-church"></i>
+                    <h3>驿站寺庙</h3>
+                    <p>京藏古道上的驿站不仅是交通枢纽，也是宗教活动的重要场所。许多驿站附近都建有寺庙，成为过往行人祈愿平安的地方，也反映了元代宗教信仰的多元化。</p>
+                </div>
+                <div class="culture-intro-item">
+                    <i class="fas fa-pray"></i>
+                    <h3>民族宗教</h3>
+                    <p>京藏古道穿越多个民族聚居区，见证了元代各民族之间的交流与融合。不同民族的宗教信仰、风俗习惯在这条古道上相互影响，形成了独特的文化景观。</p>
+                </div>
+                <div class="culture-intro-item">
+                    <i class="fas fa-history"></i>
+                    <h3>历史事件</h3>
+                    <p>京藏古道上发生了许多重要的历史事件，这些事件不仅影响了元代的政治格局，也对后世产生了深远的影响。从忽必烈建立驿站制度到八思巴往返大都与西藏，古道见证了元代的兴衰变迁。</p>
+                </div>
+                <div class="culture-intro-item">
+                    <i class="fas fa-user-tie"></i>
+                    <h3>历史人物</h3>
+                    <p>京藏古道上涌现出许多杰出的历史人物，他们或为国家统一作出贡献，或在文化交流中发挥重要作用，或在商贸活动中成就非凡。这些人物的故事构成了古道历史的重要组成部分。</p>
+                </div>
+                <div class="culture-intro-item">
+                    <i class="fas fa-project-diagram"></i>
+                    <h3>知识图谱</h3>
+                    <p>通过知识图谱的方式，可以直观地展示京藏古道相关的人物、事件、地点之间的关联关系，帮助我们更好地理解古道的历史文化内涵。</p>
+                </div>
+                <div class="culture-intro-item">
+                    <i class="fas fa-book"></i>
+                    <h3>历史叙事</h3>
+                    <p>京藏古道的历史不仅存在于官方文献中，也通过民间传说、诗歌、游记等形式传承下来。这些历史叙事为我们了解古道的真实面貌提供了丰富的资料。</p>
+                </div>
+            </div>
+            <a href="culture.html" class="btn-primary">探索文化内涵</a>
+        </div>
+    </section>
+
+    <!-- 旅游攻略 -->
+    <section class="travel-intro-section">
+        <div class="container">
+            <h2>旅游攻略</h2>
+            <p>沿着元代驿路，探索北京至西藏的历史文化与自然风光</p>
+            <div class="travel-intro-content">
+                <div class="travel-intro-item">
+                    <i class="fas fa-video"></i>
+                    <h3>唐蕃古道旅游视频</h3>
+                    <p>通过视频了解唐蕃古道的历史文化与自然风光，感受这条古老驿路的魅力。</p>
+                </div>
+                <div class="travel-intro-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    <h3>最佳旅游时间</h3>
+                    <p>京藏古道的最佳旅游时间为每年的5月至10月，这段时间气候适宜，道路畅通，沿途风景优美。</p>
+                </div>
+                <div class="travel-intro-item">
+                    <i class="fas fa-route"></i>
+                    <h3>经典路线推荐</h3>
+                    <p>从北京出发，经过河北、山西、内蒙古、宁夏、甘肃、青海，最终到达西藏拉萨，沿途可以欣赏到不同地区的历史文化与自然风光。</p>
+                </div>
+                <div class="travel-intro-item">
+                    <i class="fas fa-lightbulb"></i>
+                    <h3>旅游贴士</h3>
+                    <p>包括特色美食、住宿推荐、交通方式、摄影建议等实用信息，帮助您更好地规划行程。</p>
+                </div>
+            </div>
+            <a href="travel.html" class="btn-primary">查看旅游攻略</a>
+        </div>
+    </section>
+
+    <!-- 关于平台 -->
+    <section id="about" class="about-section">
+        <div class="container">
+            <h2>关于平台</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <h3>平台建设目标</h3>
+                    <p>京藏古道人文环境时空信息开放平台旨在通过现代信息技术，整合多源历史地理数据，构建一个综合性的历史地理信息开放平台，为研究人员、教育工作者和历史爱好者提供丰富的历史地理数据和可视化工具，促进京藏古道历史文化的研究与传承。</p>
+                    <h3>建设团队</h3>
+                    <p>平台由武汉大学、兰州大学等多位师生联合建设，汇聚了历史地理、藏学、信息技术等多学科专家学者。</p>
+                    <h3>联系方式</h3>
+                    <p>邮箱：contact@jzgd-platform.org</p>
+                    <p>电话：XXXXXX</p>
+                </div>
+                <div class="about-image">
+                    <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=ancient%20Chinese%20caravan%20traveling%20along%20a%20mountain%20path%20from%20Beijing%20to%20Tibet%2C%20historical%20scene%20with%20traditional%20transportation&image_size=portrait_4_3" alt="京藏古道历史场景">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-info">
+                    <h3>京藏古道人文环境时空信息开放平台</h3>
+                    <p>元代北京至西藏的驿路文明</p>
+                </div>
+                <div class="footer-links">
+                    <h4>快速链接</h4>
+                    <ul>
+                        <li><a href="#">首页</a></li>
+                        <li><a href="#explore">古道探索</a></li>
+                        <li><a href="#map">地图展示</a></li>
+                        <li><a href="#dataset">数据集</a></li>
+                        <li><a href="culture.html">文化内涵</a></li>
+                        <li><a href="travel.html">旅游攻略</a></li>
+                        <li><a href="#about">关于平台</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h4>联系方式</h4>
+                    <p>邮箱：contact@jzgd-platform.org</p>
+                    <p>电话：010-12345678</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 京藏古道人文环境时空信息开放平台 版权所有</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+# 视频文件
+*.mp4
+*.avi
+*.mov
+*.wmv
+
+# PDF文件
+*.pdf
+
+# 其他大型文件
+*.zip
+*.rar
+*.7z
+
+# 系统文件
+Thumbs.db
+.DS_Store
+
+# 临时文件
+*.tmp
+*.temp
+
+# 编辑器文件
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 日志文件
+*.log

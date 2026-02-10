@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF上传与预览 - 京藏古道人文环境时空信息开放平台</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/pdf-viewer.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- PDF.js库 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1>京藏古道人文环境时空信息开放平台</h1>
+                <p>元代北京至西藏的驿路文明</p>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">首页</a></li>
+                    <li><a href="index.html#explore">古道探索</a></li>
+                    <li><a href="index.html#map">地图展示</a></li>
+                    <li><a href="index.html#dataset">数据集</a></li>
+                    <li><a href="culture.html">文化内涵</a></li>
+                    <li><a href="pdf-viewer.html" class="active">PDF上传预览</a></li>
+                    <li><a href="index.html#about">关于平台</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 页面标题 -->
+    <section class="page-header">
+        <div class="container">
+            <h1>PDF上传与预览</h1>
+            <p>上传并预览与京藏古道相关的PDF文档</p>
+        </div>
+    </section>
+
+    <!-- 内容区域 -->
+    <section class="content-section">
+        <div class="container">
+            <!-- PDF上传区域 -->
+            <div class="pdf-upload-section">
+                <h2><i class="fas fa-upload"></i> PDF上传</h2>
+                <div class="upload-container">
+                    <div class="upload-area" id="upload-area">
+                        <i class="fas fa-file-pdf"></i>
+                        <h3>拖拽文件到此处或点击上传</h3>
+                        <p>支持PDF格式文件，最大文件大小为50MB</p>
+                        <input type="file" id="file-input" class="file-input" accept=".pdf">
+                        <label for="file-input" class="btn-upload">选择PDF文件</label>
+                    </div>
+                    <div id="file-info" class="file-info"></div>
+                    <div id="message" class="message"></div>
+                </div>
+            </div>
+
+            <!-- PDF预览区域 -->
+            <div class="pdf-preview-section">
+                <h2><i class="fas fa-file-pdf"></i> PDF预览</h2>
+                <div class="pdf-container">
+                    <div class="pdf-canvas-container" id="pdf-canvas-container">
+                        <div class="pdf-canvas-wrapper">
+                            <canvas id="pdf-canvas-left" class="pdf-canvas"></canvas>
+                        </div>
+                        <div class="pdf-canvas-wrapper">
+                            <canvas id="pdf-canvas-right" class="pdf-canvas"></canvas>
+                        </div>
+                    </div>
+                    <div class="pdf-controls">
+                        <button id="prev-page" disabled>上一页</button>
+                        <span class="page-info" id="page-info">第 0 / 0 页</span>
+                        <button id="next-page" disabled>下一页</button>
+                        <div class="zoom-controls">
+                            <button id="fullscreen-btn" class="fullscreen-btn">全屏</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-info">
+                    <h3>京藏古道人文环境时空信息开放平台</h3>
+                    <p>元代北京至西藏的驿路文明</p>
+                </div>
+                <div class="footer-links">
+                    <h4>快速链接</h4>
+                    <ul>
+                        <li><a href="index.html">首页</a></li>
+                        <li><a href="index.html#explore">古道探索</a></li>
+                        <li><a href="index.html#map">地图展示</a></li>
+                        <li><a href="index.html#dataset">数据集</a></li>
+                        <li><a href="culture.html">文化内涵</a></li>
+                        <li><a href="pdf-viewer.html">PDF上传预览</a></li>
+                        <li><a href="index.html#about">关于平台</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h4>联系方式</h4>
+                    <p>邮箱：contact@jzgd-platform.org</p>
+                    <p>电话：010-12345678</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 京藏古道人文环境时空信息开放平台 版权所有</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // PDF查看器相关变量
+        let pdfDoc = null;
+        let currentPage = 1;
+        let zoom = 1.0;
+        let isFullscreen = false;
+        const canvasLeft = document.getElementById('pdf-canvas-left');
+        const canvasRight = document.getElementById('pdf-canvas-right');
+        const ctxLeft = canvasLeft.getContext('2d');
+        const ctxRight = canvasRight.getContext('2d');
+        const canvasContainer = document.getElementById('pdf-canvas-container');
+        const pdfContainer = document.querySelector('.pdf-container');
+        const uploadArea = document.getElementById('upload-area');
+        const fileInput = document.getElementById('file-input');
+        const fileInfo = document.getElementById('file-info');
+        const message = document.getElementById('message');
+        const prevPageBtn = document.getElementById('prev-page');
+        const nextPageBtn = document.getElementById('next-page');
+        const pageInfoEl = document.getElementById('page-info');
+        const fullscreenBtn = document.getElementById('fullscreen-btn');
+
+        // 显示消息
+        function showMessage(text, type) {
+            message.textContent = text;
+            message.className = type === 'error' ? 'error-message' : 'success-message';
+        }
+
+        // 更新全屏按钮文本
+        function updateFullscreenBtn() {
+            if (fullscreenBtn) {
+                fullscreenBtn.textContent = isFullscreen ? '退出全屏' : '全屏';
+            }
+        }
+
+        // 切换全屏
+        function toggleFullscreen() {
+            if (!pdfContainer) return;
+            
+            if (!isFullscreen) {
+                // 进入全屏
+                if (pdfContainer.requestFullscreen) {
+                    pdfContainer.requestFullscreen();
+                } else if (pdfContainer.webkitRequestFullscreen) {
+                    pdfContainer.webkitRequestFullscreen();
+                } else if (pdfContainer.mozRequestFullScreen) {
+                    pdfContainer.mozRequestFullScreen();
+                } else if (pdfContainer.msRequestFullscreen) {
+                    pdfContainer.msRequestFullscreen();
+                }
+            } else {
+                // 退出全屏
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if (document.mozCancelFullScreen) {
+                    document.mozCancelFullScreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                }
+            }
+        }
+
+        // 更新页面信息
+        function updatePageInfo() {
+            if (pageInfoEl && pdfDoc) {
+                pageInfoEl.textContent = `第 ${currentPage} / ${pdfDoc.numPages} 页`;
+            }
+        }
+
+        // 更新页面按钮状态
+        function updatePageButtons() {
+            if (prevPageBtn && nextPageBtn && pdfDoc) {
+                prevPageBtn.disabled = currentPage <= 1;
+                nextPageBtn.disabled = currentPage >= pdfDoc.numPages;
+            }
+        }
+
+        // 渲染指定页面
+        function renderPage(num) {
+            if (!pdfDoc || !canvasContainer) return;
+            
+            // 重置canvas容器类
+            canvasContainer.className = 'pdf-canvas-container';
+            
+            // 清除canvas
+            if (ctxLeft) ctxLeft.clearRect(0, 0, canvasLeft.width, canvasLeft.height);
+            if (ctxRight) ctxRight.clearRect(0, 0, canvasRight.width, canvasRight.height);
+            
+            // 检查是否为最后一页且是奇数页
+            const isLastPageOdd = num === pdfDoc.numPages && num % 2 !== 0;
+            
+            if (isLastPageOdd) {
+                // 单页模式
+                canvasContainer.classList.add('single-page');
+                
+                // 渲染单页（右侧）
+                pdfDoc.getPage(num).then(function(page) {
+                    const viewport = page.getViewport({ scale: zoom });
+                    if (canvasRight) {
+                        canvasRight.height = viewport.height;
+                        canvasRight.width = viewport.width;
+                        
+                        // 隐藏左侧canvas
+                        if (canvasLeft) canvasLeft.style.display = 'none';
+                        canvasRight.style.display = 'block';
+
+                        const renderContext = {
+                            canvasContext: ctxRight,
+                            viewport: viewport
+                        };
+
+                        const renderTask = page.render(renderContext);
+                        renderTask.promise.then(function() {
+                            updatePageButtons();
+                        });
+                    }
+                });
+            } else {
+                // 双页模式
+                canvasContainer.classList.add('double-page');
+                
+                // 确保currentPage是奇数
+                if (num % 2 === 0) {
+                    num--;
+                }
+                
+                // 显示两个canvas
+                if (canvasLeft) canvasLeft.style.display = 'block';
+                if (canvasRight) canvasRight.style.display = 'block';
+                
+                // 确保左侧显示偶数页，右侧显示奇数页
+                // 如果num是奇数，那么左侧显示num-1，右侧显示num
+                // 如果num是偶数，那么左侧显示num，右侧显示num+1
+                let leftPageNum, rightPageNum;
+                if (num % 2 === 1) {
+                    // num是奇数，需要调整
+                    if (num === 1) {
+                        // 第一页，左侧空白，右侧显示第一页
+                        leftPageNum = null;
+                        rightPageNum = 1;
+                    } else {
+                        // 左侧显示偶数页，右侧显示奇数页
+                        leftPageNum = num - 1;
+                        rightPageNum = num;
+                    }
+                } else {
+                    // num是偶数，正常显示
+                    leftPageNum = num;
+                    rightPageNum = num + 1;
+                }
+                
+                // 渲染左侧页面
+                if (leftPageNum) {
+                    pdfDoc.getPage(leftPageNum).then(function(page) {
+                        const viewport = page.getViewport({ scale: zoom });
+                        if (canvasLeft) {
+                            canvasLeft.height = viewport.height;
+                            canvasLeft.width = viewport.width;
+
+                            const renderContext = {
+                                canvasContext: ctxLeft,
+                                viewport: viewport
+                            };
+
+                            return page.render(renderContext).promise;
+                        }
+                    });
+                } else {
+                    // 左侧空白
+                    if (canvasLeft) canvasLeft.style.display = 'none';
+                }
+                
+                // 渲染右侧页面
+                pdfDoc.getPage(rightPageNum).then(function(page) {
+                    const viewport = page.getViewport({ scale: zoom });
+                    if (canvasRight) {
+                        canvasRight.height = viewport.height;
+                        canvasRight.width = viewport.width;
+
+                        const renderContext = {
+                            canvasContext: ctxRight,
+                            viewport: viewport
+                        };
+
+                        const renderTask = page.render(renderContext);
+                        renderTask.promise.then(function() {
+                            updatePageButtons();
+                        });
+                    }
+                });
+            }
+        }
+
+        // 初始化PDF查看器
+        function initPdfViewer() {
+            // 拖拽上传功能
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, preventDefaults, false);
+            });
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, highlight, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, unhighlight, false);
+            });
+
+            function highlight() {
+                uploadArea.classList.add('highlight');
+            }
+
+            function unhighlight() {
+                uploadArea.classList.remove('highlight');
+            }
+
+            uploadArea.addEventListener('drop', handleDrop, false);
+
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                handleFiles(files);
+            }
+
+            // 文件选择事件
+            fileInput.addEventListener('change', function() {
+                handleFiles(this.files);
+            });
+
+            // 处理上传的文件
+            function handleFiles(files) {
+                if (files.length === 0) return;
+
+                const file = files[0];
+                
+                // 检查文件类型
+                if (!file.type.match('application/pdf')) {
+                    showMessage('请上传PDF格式文件', 'error');
+                    return;
+                }
+
+                // 检查文件大小（50MB限制）
+                if (file.size > 50 * 1024 * 1024) {
+                    showMessage('文件大小超过50MB限制', 'error');
+                    return;
+                }
+
+                showMessage('正在加载PDF文件...', 'success');
+                fileInfo.innerHTML = `<p>文件名: ${file.name}</p><p>文件大小: ${formatFileSize(file.size)}</p>`;
+
+                // 读取并渲染PDF
+                const fileReader = new FileReader();
+                fileReader.onload = function() {
+                    const typedarray = new Uint8Array(this.result);
+                    renderPdf(typedarray);
+                };
+                fileReader.readAsArrayBuffer(file);
+            }
+
+            // 渲染PDF
+            function renderPdf(data) {
+                pdfjsLib.getDocument(data).promise.then(function(pdf) {
+                    pdfDoc = pdf;
+                    currentPage = 1;
+                    updatePageInfo();
+                    renderPage(currentPage);
+                    showMessage('PDF文件加载成功', 'success');
+                }).catch(function(error) {
+                    showMessage('PDF文件加载失败: ' + error.message, 'error');
+                    console.error('Error loading PDF:', error);
+                });
+            }
+
+            // 格式化文件大小
+            function formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+
+            // 上一页
+            prevPageBtn.addEventListener('click', function() {
+                if (currentPage <= 1) return;
+                
+                // 如果当前是偶数页，一次翻两页
+                if (currentPage % 2 === 0) {
+                    currentPage -= 2;
+                } else {
+                    currentPage -= 1;
+                }
+                
+                updatePageInfo();
+                renderPage(currentPage);
+            });
+
+            // 下一页
+            nextPageBtn.addEventListener('click', function() {
+                if (currentPage >= pdfDoc.numPages) return;
+                
+                // 如果当前是奇数页且不是最后一页，一次翻两页
+                if (currentPage % 2 !== 0 && currentPage < pdfDoc.numPages) {
+                    currentPage += 2;
+                } else {
+                    currentPage += 1;
+                }
+                
+                updatePageInfo();
+                renderPage(currentPage);
+            });
+
+            // 全屏功能
+            fullscreenBtn.addEventListener('click', function() {
+                toggleFullscreen();
+            });
+
+            // 监听全屏状态变化
+            document.addEventListener('fullscreenchange', function() {
+                isFullscreen = !!document.fullscreenElement;
+                updateFullscreenBtn();
+            });
+
+            document.addEventListener('webkitfullscreenchange', function() {
+                isFullscreen = !!document.webkitFullscreenElement;
+                updateFullscreenBtn();
+            });
+
+            document.addEventListener('mozfullscreenchange', function() {
+                isFullscreen = !!document.mozFullScreenElement;
+                updateFullscreenBtn();
+            });
+
+            document.addEventListener('MSFullscreenChange', function() {
+                isFullscreen = !!document.msFullscreenElement;
+                updateFullscreenBtn();
+            });
+        }
+
+        // 页面加载完成后初始化
+        window.addEventListener('DOMContentLoaded', function() {
+            initPdfViewer();
+            // 自动加载默认PDF文件
+            loadDefaultPdf();
+        });
+
+        // 加载默认PDF文件
+        function loadDefaultPdf() {
+            // 默认PDF文件路径
+            const defaultPdfUrl = '川藏茶马古道 (杨绍淮著, Shaohuai Yang, 楊紹淮 (中國歷史)) (z-library.sk, 1lib.sk, z-lib.sk).pdf';
+            
+            // 使用PDF.js加载默认PDF
+            pdfjsLib.getDocument(defaultPdfUrl).promise.then(function(pdf) {
+                pdfDoc = pdf;
+                currentPage = 1;
+                updatePageInfo();
+                renderPage(currentPage);
+                showMessage('默认PDF文件加载成功', 'success');
+                fileInfo.innerHTML = `<p>文件名: 川藏茶马古道</p><p>默认加载文件</p>`;
+                
+                // 移除自动全屏请求，因为浏览器要求用户交互才能进入全屏
+                // 让用户手动点击全屏按钮进入全屏模式
+            }).catch(function(error) {
+                showMessage('默认PDF文件加载失败: ' + error.message, 'error');
+                console.error('Error loading default PDF:', error);
+            });
+        }
+    </script>
+</body>
+</html>
