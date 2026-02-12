@@ -6,8 +6,136 @@
     <title>历史事件脉络梳理 - 京藏古道人文环境时空信息开放平台</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
-    <link href="js/vendor/vis-timeline-graph2d.min.css" rel="stylesheet">
-    <script src="js/vendor/vis-timeline-graph2d.min.js"></script>
+    <style>
+        /* 自定义时间轴样式 */
+        .custom-timeline {
+            position: relative;
+            padding: 20px 0;
+            margin: 20px 0;
+        }
+        
+        .timeline-line {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            background-color: #8B4513;
+        }
+        
+        .timeline-event {
+            position: relative;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .timeline-event:nth-child(odd) {
+            flex-direction: row;
+        }
+        
+        .timeline-event:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+        
+        .event-content {
+            width: 45%;
+            padding: 15px;
+            background-color: #f9f4ee;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(139, 69, 19, 0.1);
+            border-left: 4px solid #8B4513;
+        }
+        
+        .event-content h4 {
+            color: #8B4513;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+        
+        .event-content p {
+            margin: 5px 0;
+            line-height: 1.5;
+        }
+        
+        .event-point {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 16px;
+            height: 16px;
+            background-color: #FFD700;
+            border: 2px solid #FFA500;
+            border-radius: 50%;
+            z-index: 10;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .event-point:hover {
+            transform: translateX(-50%) scale(1.3);
+            box-shadow: 0 0 12px rgba(255, 215, 0, 0.8);
+        }
+        
+        .event-point.key-event {
+            width: 20px;
+            height: 20px;
+            background-color: #32CD32;
+            border: 3px solid #228B22;
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(50, 205, 50, 0.8);
+            }
+            70% {
+                box-shadow: 0 0 0 12px rgba(50, 205, 50, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(50, 205, 50, 0);
+            }
+        }
+        
+        .event-date {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: -30px;
+            background-color: #8B4513;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .timeline-line {
+                left: 20px;
+            }
+            
+            .timeline-event {
+                flex-direction: row !important;
+                padding-left: 50px;
+            }
+            
+            .event-content {
+                width: 100%;
+            }
+            
+            .event-point {
+                left: 20px;
+            }
+            
+            .event-date {
+                left: 20px;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- 顶部导航栏 -->
@@ -80,195 +208,187 @@
         const eventsData = [
             {
                 id: 1,
-                content: '成吉思汗建立蒙古汗国',
                 title: '成吉思汗建立蒙古汗国',
                 description: '铁木真统一蒙古各部，建立蒙古汗国，为后来的京藏古道建设奠定了政治基础。',
-                start: new Date(1206, 0, 1),
-                type: 'point',
-                className: 'timeline-point'
+                date: '1206年',
+                isKeyEvent: false
             },
             {
                 id: 2,
-                content: '蒙古灭西夏，控制河西走廊',
                 title: '蒙古灭西夏，控制河西走廊',
                 description: '蒙古军队灭亡西夏，控制了河西走廊地区，为连接中原与西藏的交通奠定了基础。',
-                start: new Date(1227, 0, 1),
-                type: 'point',
-                className: 'timeline-point'
+                date: '1227年',
+                isKeyEvent: false
             },
             {
                 id: 3,
-                content: '蒙古军入藏',
                 title: '蒙古军入藏',
                 description: '蒙古皇子阔端派军进入西藏，与西藏地方势力建立联系。',
-                start: new Date(1239, 0, 1),
-                type: 'point',
-                className: 'timeline-point'
+                date: '1239年',
+                isKeyEvent: false
             },
             {
                 id: 4,
-                content: '凉州会盟',
                 title: '凉州会盟',
                 description: '萨迦派领袖萨班与蒙古皇子阔端在凉州（今甘肃武威）举行会盟，西藏正式归属蒙古汗国管辖，京藏古道开始形成。',
                 impact: '确立了西藏与中央政权的隶属关系，开启了京藏之间的政治、经济、文化交流。',
-                start: new Date(1247, 0, 1),
-                type: 'point',
-                className: 'timeline-point key-event'
+                date: '1247年',
+                isKeyEvent: true
             },
             {
                 id: 5,
-                content: '忽必烈建立元朝',
                 title: '忽必烈建立元朝',
                 description: '忽必烈定国号为元，建立元朝，定都大都（今北京），京藏古道的起点正式确立。',
-                start: new Date(1271, 0, 1),
-                type: 'point',
-                className: 'timeline-point'
+                date: '1271年',
+                isKeyEvent: false
             },
             {
                 id: 6,
-                content: '元朝统一中国',
                 title: '元朝统一中国',
                 description: '元朝灭亡南宋，统一中国，为京藏古道的全面建设创造了条件。',
-                start: new Date(1279, 0, 1),
-                type: 'point',
-                className: 'timeline-point'
+                date: '1279年',
+                isKeyEvent: false
             },
             {
                 id: 7,
-                content: '设置吐蕃等处宣慰司都元帅府',
                 title: '设置吐蕃等处宣慰司都元帅府',
                 description: '元朝在西藏地区设置吐蕃等处宣慰司都元帅府，加强对西藏的管辖，京藏古道的管理体系初步形成。',
-                start: new Date(1280, 0, 1),
-                type: 'point',
-                className: 'timeline-point'
+                date: '1280年',
+                isKeyEvent: false
             },
             {
                 id: 8,
-                content: '开通大都至西藏的驿路',
                 title: '开通大都至西藏的驿路',
                 description: '元朝正式开通从大都（今北京）至西藏的驿路，设置驿站，建立了完整的驿传体系。',
                 impact: '形成了连接内地与西藏的官方通道，促进了两地之间的人员往来和物资交流。',
-                start: new Date(1292, 0, 1),
-                type: 'point',
-                className: 'timeline-point key-event'
+                date: '1292年',
+                isKeyEvent: true
             },
             {
                 id: 9,
-                content: '修订驿路管理制度',
                 title: '修订驿路管理制度',
                 description: '元朝修订驿路管理制度，明确驿站的职责和运行机制，提高了京藏古道的运行效率。',
                 impact: '完善了驿路管理体系，保障了京藏古道的畅通，促进了沿线地区的发展。',
-                start: new Date(1304, 0, 1),
-                type: 'point',
-                className: 'timeline-point key-event'
+                date: '1304年',
+                isKeyEvent: true
             },
             {
                 id: 10,
-                content: '元顺帝即位',
                 title: '元顺帝即位',
                 description: '元顺帝妥懽帖睦尔即位，此时京藏古道已成为连接内地与西藏的重要通道。',
-                start: new Date(1333, 0, 1),
-                type: 'point',
-                className: 'timeline-point'
+                date: '1333年',
+                isKeyEvent: false
             },
             {
                 id: 11,
-                content: '红巾军起义爆发',
                 title: '红巾军起义爆发',
                 description: '红巾军起义爆发，元朝统治开始动摇，京藏古道的管理受到影响。',
-                start: new Date(1351, 0, 1),
-                type: 'point',
-                className: 'timeline-point'
+                date: '1351年',
+                isKeyEvent: false
             },
             {
                 id: 12,
-                content: '明朝建立，元朝灭亡',
                 title: '明朝建立，元朝灭亡',
                 description: '朱元璋建立明朝，元朝灭亡，京藏古道的元代历史结束，进入明朝管理时期。',
-                start: new Date(1368, 0, 1),
-                type: 'point',
-                className: 'timeline-point'
+                date: '1368年',
+                isKeyEvent: false
             }
         ];
 
-        // 初始化时间轴
-        function initTimeline() {
+        // 初始化自定义时间轴
+        function initCustomTimeline() {
             const container = document.getElementById('event-timeline');
-            const options = {
-                showCurrentTime: false,
-                zoomable: true,
-                orientation: 'top',
-                tooltip: {
-                    followMouse: true,
-                    overflowMethod: 'cap',
-                    content: function(item) {
-                        return `<div class="tooltip-content">
-                            <h4>${item.title}</h4>
-                            <p>${item.description}</p>
-                            ${item.impact ? `<p><strong>历史影响：</strong>${item.impact}</p>` : ''}
-                        </div>`;
-                    }
-                },
-                start: new Date(1200, 0, 1),
-                end: new Date(1370, 0, 1),
-                min: new Date(1190, 0, 1),
-                max: new Date(1380, 0, 1),
-                // 自定义点样式
-                itemStyle: function(item) {
-                    return {
-                        className: item.className
-                    };
+            
+            // 创建时间轴容器
+            const timelineContainer = document.createElement('div');
+            timelineContainer.className = 'custom-timeline';
+            
+            // 创建时间轴线
+            const timelineLine = document.createElement('div');
+            timelineLine.className = 'timeline-line';
+            timelineContainer.appendChild(timelineLine);
+            
+            // 添加事件
+            eventsData.forEach(event => {
+                const eventElement = document.createElement('div');
+                eventElement.className = 'timeline-event';
+                
+                // 添加日期标签
+                const dateElement = document.createElement('div');
+                dateElement.className = 'event-date';
+                dateElement.textContent = event.date;
+                eventElement.appendChild(dateElement);
+                
+                // 添加事件点
+                const pointElement = document.createElement('div');
+                pointElement.className = `event-point ${event.isKeyEvent ? 'key-event' : ''}`;
+                eventElement.appendChild(pointElement);
+                
+                // 添加事件内容
+                const contentElement = document.createElement('div');
+                contentElement.className = 'event-content';
+                
+                const titleElement = document.createElement('h4');
+                titleElement.textContent = event.title;
+                contentElement.appendChild(titleElement);
+                
+                const descElement = document.createElement('p');
+                descElement.textContent = event.description;
+                contentElement.appendChild(descElement);
+                
+                if (event.impact) {
+                    const impactElement = document.createElement('p');
+                    impactElement.innerHTML = `<strong>历史影响：</strong>${event.impact}`;
+                    contentElement.appendChild(impactElement);
                 }
-            };
-            
-            const timeline = new vis.Timeline(container, eventsData, options);
-            
-            // 添加点击事件，点击点时弹出详细信息
-            timeline.on('click', function(props) {
-                if (props.item) {
-                    const item = eventsData.find(event => event.id === props.item);
-                    if (item) {
-                        // 创建自定义弹窗
-                        const modal = document.createElement('div');
-                        modal.className = 'custom-modal';
-                        modal.innerHTML = `
-                            <div class="custom-modal-overlay"></div>
-                            <div class="custom-modal-dialog">
-                                <div class="custom-modal-content">
-                                    <div class="custom-modal-header">
-                                        <h5 class="custom-modal-title">${item.title}</h5>
-                                        <button type="button" class="custom-modal-close">&times;</button>
-                                    </div>
-                                    <div class="custom-modal-body">
-                                        <div>
-                                            <p>${item.description}</p>
-                                            ${item.impact ? `<div class="event-impact"><h4>历史影响：</h4><p>${item.impact}</p></div>` : ''}
-                                        </div>
+                
+                eventElement.appendChild(contentElement);
+                timelineContainer.appendChild(eventElement);
+                
+                // 添加点击事件
+                pointElement.addEventListener('click', function() {
+                    // 创建自定义弹窗
+                    const modal = document.createElement('div');
+                    modal.className = 'custom-modal';
+                    modal.innerHTML = `
+                        <div class="custom-modal-overlay"></div>
+                        <div class="custom-modal-dialog">
+                            <div class="custom-modal-content">
+                                <div class="custom-modal-header">
+                                    <h5 class="custom-modal-title">${event.title} (${event.date})</h5>
+                                    <button type="button" class="custom-modal-close">&times;</button>
+                                </div>
+                                <div class="custom-modal-body">
+                                    <div>
+                                        <p>${event.description}</p>
+                                        ${event.impact ? `<div class="event-impact"><h4>历史影响：</h4><p>${event.impact}</p></div>` : ''}
                                     </div>
                                 </div>
                             </div>
-                        `;
-                        document.body.appendChild(modal);
-                        modal.style.display = 'block';
-                        
-                        // 关闭弹窗
-                        modal.querySelector('.custom-modal-close').addEventListener('click', function() {
-                            modal.style.display = 'none';
-                            document.body.removeChild(modal);
-                        });
-                        
-                        // 点击背景关闭弹窗
-                        modal.querySelector('.custom-modal-overlay').addEventListener('click', function() {
-                            modal.style.display = 'none';
-                            document.body.removeChild(modal);
-                        });
-                    }
-                }
+                        </div>
+                    `;
+                    document.body.appendChild(modal);
+                    modal.style.display = 'block';
+                    
+                    // 关闭弹窗
+                    modal.querySelector('.custom-modal-close').addEventListener('click', function() {
+                        modal.style.display = 'none';
+                        document.body.removeChild(modal);
+                    });
+                    
+                    // 点击背景关闭弹窗
+                    modal.querySelector('.custom-modal-overlay').addEventListener('click', function() {
+                        modal.style.display = 'none';
+                        document.body.removeChild(modal);
+                    });
+                });
             });
+            
+            container.appendChild(timelineContainer);
         }
 
         // 页面加载完成后初始化时间轴
-        window.addEventListener('DOMContentLoaded', initTimeline);
+        window.addEventListener('DOMContentLoaded', initCustomTimeline);
     </script>
 
     <!-- 重要历史事件 -->
