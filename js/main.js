@@ -174,6 +174,13 @@ window.addEventListener('load', function() {
 
 // 初始化高德地图
 function initAmap() {
+    // 检查是否是route.html页面，如果是则跳过初始化（route.html有自己的地图初始化）
+    const currentPage = window.location.pathname;
+    if (currentPage.includes('route.html')) {
+        console.log('This is route.html, skipping map initialization (route.html has its own map initialization)');
+        return;
+    }
+    
     // 检查地图容器是否存在
     const mapContainer = document.getElementById('amap-container');
     if (!mapContainer) {
