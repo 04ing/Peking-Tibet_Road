@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- 高德地图API -->
-    <script src="https://webapi.amap.com/maps?v=2.0&key=fe4e50125495ae9967861058e720c5dd"></script>
+    <script src="https://webapi.amap.com/maps?v=2.0&key=fe4e50125495ae9967861058e720c5dd&plugin=AMap.ToolBar,AMap.Scale"></script>
 </head>
 <body>
     <!-- 顶部导航栏 -->
@@ -257,87 +257,159 @@
 
     <script src="js/main.js"></script>
     <script>
-        // 初始化高德地图
-        var map = new AMap.Map('amap-container', {
-            center: [103.834303, 36.061101], // 兰州附近作为中心点
-            zoom: 5,
-            mapStyle: 'amap://styles/whitesmoke'
-        });
-        
-        // 从JSON文件加载路线数据
-        fetch('json/route-data.json')
-            .then(response => response.json())
-            .then(data => {
-                console.log('路线数据加载成功:', data);
-                
-                // 获取数据
-                const nodes = data.nodes;
-                const mainRoute = data.mainRoute;
-                const branchRoutes = data.branchRoutes;
-                
-                // 绘制主要路线
-                var mainPolyline = new AMap.Polyline({
-                    path: mainRoute,
-                    strokeColor: '#1890ff',
-                    strokeWeight: 6,
-                    strokeOpacity: 0.8,
-                    strokeStyle: 'solid'
-                });
-                mainPolyline.setMap(map);
-                
-                // 绘制支线
-                branchRoutes.forEach(function(branch) {
-                    var polyline = new AMap.Polyline({
-                        path: branch.path,
-                        strokeColor: '#52c41a',
-                        strokeWeight: 4,
-                        strokeOpacity: 0.6,
-                        strokeStyle: 'dashed'
-                    });
-                    polyline.setMap(map);
-                });
-                
-                // 添加节点标记
-                nodes.forEach(function(node) {
-                    var marker = new AMap.Marker({
-                        position: [node.lng, node.lat],
-                        title: node.name,
-                        icon: new AMap.Icon({
-                            size: new AMap.Size(30, 30),
-                            image: 'https://webapi.amap.com/theme/v1.3/markers/n/mark_b.png',
-                            imageSize: new AMap.Size(30, 30)
-                        })
-                    });
-                    
-                    // 信息窗口
-                    var infoWindow = new AMap.InfoWindow({
-                        content: '<h3>' + node.name + '</h3><p>' + node.desc + '</p>',
-                        offset: new AMap.Pixel(0, -30)
-                    });
-                    
-                    // 点击标记打开信息窗口
-                    marker.on('click', function() {
-                        infoWindow.open(map, marker.getPosition());
-                    });
-                    
-                    marker.setMap(map);
-                });
-                
-                // 添加控件
-                map.addControl(new AMap.ToolBar({
-                    position: 'RB'
-                }));
-                
-                map.addControl(new AMap.Scale({
-                    position: 'RB'
-                }));
-            })
-            .catch(error => {
-                console.error('加载路线数据失败:', error);
-                // 显示错误信息
-                document.getElementById('amap-container').innerHTML = 
-                    '<div style="display: flex; align-items: center; justify-content: center; height: 100%; color: #666;">数据加载失败，请刷新页面重试</div>';
+        // 检查高德地图API是否加载成功
+        if (typeof AMap === 'undefined') {
+            console.error('高德地图API加载失败');
+            document.getElementById('amap-container').innerHTML = 
+                '<div style="display: flex; align-items: center; justify-content: center; height: 100%; color: #666;">高德地图API加载失败，请检查网络连接</div>';
+        } else {
+            console.log('高德地图API加载成功');
+            
+            // 检查插件是否加载成功
+            console.log('AMap.ToolBar是否可用:', typeof AMap.ToolBar !== 'undefined');
+            console.log('AMap.Scale是否可用:', typeof AMap.Scale !== 'undefined');
+            
+            // 初始化高德地图
+            var map = new AMap.Map('amap-container', {
+                center: [103.834303, 36.061101], // 兰州附近作为中心点
+                zoom: 5,
+                mapStyle: 'amap://styles/whitesmoke'
             });
+            
+            console.log('地图初始化成功:', map);
+            
+            // 检查文件路径是否正确
+            console.log('当前页面URL:', window.location.href);
+            
+            // 从JSON文件加载路线数据
+            fetch('json/route-data.json')
+                .then(response => {
+                    console.log('fetch响应状态:', response.status);
+                    if (!response.ok) {
+                        throw new Error('HTTP错误，状态码: ' + response.status);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('路线数据加载成功:', data);
+                    
+                    // 检查数据结构
+                    console.log('nodes长度:', data.nodes ? data.nodes.length : '未定义');
+                    console.log('mainRoute长度:', data.mainRoute ? data.mainRoute.length : '未定义');
+                    console.log('branchRoutes长度:', data.branchRoutes ? data.branchRoutes.length : '未定义');
+                    
+                    // 获取数据
+                    const nodes = data.nodes;
+                    const mainRoute = data.mainRoute;
+                    const branchRoutes = data.branchRoutes;
+                    
+                    // 绘制主要路线
+                    console.log('开始绘制主要路线...');
+                    var mainPolyline = new AMap.Polyline({
+                        path: mainRoute,
+                        strokeColor: '#1890ff',
+                        strokeWeight: 6,
+                        strokeOpacity: 0.8,
+                        strokeStyle: 'solid'
+                    });
+                    
+                    // 为主要路线添加点击事件
+                    mainPolyline.on('click', function() {
+                        var infoWindow = new AMap.InfoWindow({
+                            content: '<h3>京藏古道主线</h3><p>元代北京至西藏的主要驿路，全长约4300公里，连接了中原与西藏地区。</p>',
+                            offset: new AMap.Pixel(0, -30)
+                        });
+                        infoWindow.open(map, mainRoute[Math.floor(mainRoute.length / 2)]);
+                    });
+                    
+                    mainPolyline.setMap(map);
+                    console.log('主要路线绘制完成:', mainPolyline);
+                    
+                    // 绘制支线
+                    console.log('开始绘制支线...');
+                    branchRoutes.forEach(function(branch, index) {
+                        console.log('绘制支线', index + 1, branch.name);
+                        var polyline = new AMap.Polyline({
+                            path: branch.path,
+                            strokeColor: '#52c41a',
+                            strokeWeight: 4,
+                            strokeOpacity: 0.6,
+                            strokeStyle: 'dashed'
+                        });
+                        
+                        // 为支线添加点击事件
+                        polyline.on('click', function() {
+                            var infoWindow = new AMap.InfoWindow({
+                                content: '<h3>' + branch.name + '</h3><p>' + branch.desc + '</p>',
+                                offset: new AMap.Pixel(0, -30)
+                            });
+                            infoWindow.open(map, branch.path[Math.floor(branch.path.length / 2)]);
+                        });
+                        
+                        polyline.setMap(map);
+                        console.log('支线', index + 1, '绘制完成:', polyline);
+                    });
+                    console.log('所有支线绘制完成');
+                    
+                    // 添加节点标记
+                    console.log('开始添加节点标记...');
+                    nodes.forEach(function(node, index) {
+                        console.log('添加节点标记', index + 1, node.name);
+                        var marker = new AMap.Marker({
+                            position: [node.lng, node.lat],
+                            title: node.name,
+                            icon: new AMap.Icon({
+                                size: new AMap.Size(30, 30),
+                                image: 'https://webapi.amap.com/theme/v1.3/markers/n/mark_b.png',
+                                imageSize: new AMap.Size(30, 30)
+                            })
+                        });
+                        
+                        // 信息窗口
+                        var infoWindow = new AMap.InfoWindow({
+                            content: '<h3>' + node.name + '</h3><p>' + node.desc + '</p>',
+                            offset: new AMap.Pixel(0, -30)
+                        });
+                        
+                        // 点击标记打开信息窗口
+                        marker.on('click', function() {
+                            infoWindow.open(map, marker.getPosition());
+                        });
+                        
+                        marker.setMap(map);
+                        console.log('节点标记', index + 1, '添加完成:', marker);
+                    });
+                    console.log('所有节点标记添加完成');
+                    
+                    // 添加控件
+                    console.log('开始添加控件...');
+                    if (typeof AMap.ToolBar !== 'undefined') {
+                        map.addControl(new AMap.ToolBar({
+                            position: 'RB'
+                        }));
+                        console.log('ToolBar控件添加完成');
+                    } else {
+                        console.warn('AMap.ToolBar不可用，跳过添加');
+                    }
+                    
+                    if (typeof AMap.Scale !== 'undefined') {
+                        map.addControl(new AMap.Scale({
+                            position: 'RB'
+                        }));
+                        console.log('Scale控件添加完成');
+                    } else {
+                        console.warn('AMap.Scale不可用，跳过添加');
+                    }
+                    console.log('所有控件添加完成');
+                })
+                .catch(error => {
+                    console.error('加载路线数据失败:', error);
+                    console.error('错误详细信息:', error.message);
+                    // 显示错误信息
+                    document.getElementById('amap-container').innerHTML = 
+                        '<div style="display: flex; align-items: center; justify-content: center; height: 100%; color: #666;">数据加载失败，请检查控制台错误信息</div>';
+                });
+        }
     </script>
 </body>
 </html>
