@@ -123,6 +123,62 @@
         </div>
     </section>
 
+    <!-- AI旅游故事生成器 -->
+    <section class="ai-travel-section">
+        <div class="container">
+            <h2><i class="fas fa-robot"></i> AI旅游故事生成器</h2>
+            <p>选择您的起点、终点和旅行目的，AI将为您生成个性化的京藏古道旅游故事。</p>
+            
+            <div class="ai-form">
+                <div class="form-group">
+                    <label for="start-point">起点</label>
+                    <select id="start-point" class="form-control">
+                        <option value="北京">北京</option>
+                        <option value="河北">河北</option>
+                        <option value="山西">山西</option>
+                        <option value="内蒙古">内蒙古</option>
+                        <option value="宁夏">宁夏</option>
+                        <option value="甘肃">甘肃</option>
+                        <option value="青海">青海</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="end-point">终点</label>
+                    <select id="end-point" class="form-control">
+                        <option value="河北">河北</option>
+                        <option value="山西">山西</option>
+                        <option value="内蒙古">内蒙古</option>
+                        <option value="宁夏">宁夏</option>
+                        <option value="甘肃">甘肃</option>
+                        <option value="青海">青海</option>
+                        <option value="西藏">西藏</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="travel-purpose">旅行目的</label>
+                    <select id="travel-purpose" class="form-control">
+                        <option value="文化探索">文化探索</option>
+                        <option value="自然风光">自然风光</option>
+                        <option value="历史古迹">历史古迹</option>
+                        <option value="宗教文化">宗教文化</option>
+                        <option value="美食体验">美食体验</option>
+                        <option value="摄影采风">摄影采风</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <button id="generate-story" class="btn-primary">生成旅游故事</button>
+                </div>
+            </div>
+            
+            <div id="story-result" class="story-result">
+                <h3>生成的旅游故事将显示在这里</h3>
+                <div id="story-content" class="story-content">
+                    <!-- 生成的旅游故事将显示在这里 -->
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- 旅游贴士 -->
     <section class="tips-section">
         <div class="container">
@@ -184,5 +240,104 @@
             </div>
         </div>
     </footer>
+
+    <script>
+        // AI旅游故事生成器
+        document.addEventListener('DOMContentLoaded', function() {
+            const generateButton = document.getElementById('generate-story');
+            const storyContent = document.getElementById('story-content');
+            
+            generateButton.addEventListener('click', function() {
+                const startPoint = document.getElementById('start-point').value;
+                const endPoint = document.getElementById('end-point').value;
+                const travelPurpose = document.getElementById('travel-purpose').value;
+                
+                // 显示加载状态
+                storyContent.innerHTML = '<div class="loading">正在生成旅游故事，请稍候...</div>';
+                
+                // 模拟AI生成过程
+                setTimeout(function() {
+                    // 生成旅游故事
+                    const story = generateTravelStory(startPoint, endPoint, travelPurpose);
+                    
+                    // 显示生成的故事
+                    storyContent.innerHTML = `<div class="story-text">${story}</div>`;
+                }, 1500);
+            });
+        });
+        
+        // 生成旅游故事的函数
+        function generateTravelStory(startPoint, endPoint, travelPurpose) {
+            // 定义不同旅行目的的关键词
+            const purposeKeywords = {
+                '文化探索': ['历史文化', '传统习俗', '民间艺术', '文化遗产', '历史故事'],
+                '自然风光': ['壮丽景色', '自然奇观', '山水风光', '生态环境', '自然保护区'],
+                '历史古迹': ['历史建筑', '文物古迹', '古代遗址', '历史事件', '考古发现'],
+                '宗教文化': ['宗教圣地', '寺庙道观', '宗教仪式', '信仰文化', '宗教艺术'],
+                '美食体验': ['特色美食', '传统烹饪', '地方小吃', '美食文化', '饮食习惯'],
+                '摄影采风': ['摄影景点', '光影效果', '构图技巧', '最佳拍摄时间', '摄影装备']
+            };
+            
+            // 定义不同地区的特色
+            const regionFeatures = {
+                '北京': '作为元代的首都，北京拥有丰富的历史文化遗产，如元大都遗址、八达岭长城等，同时也是现代中国的政治文化中心。',
+                '河北': '河北是京藏古道的重要组成部分，拥有承德避暑山庄、山海关等历史古迹，自然风光优美，如北戴河海滨等。',
+                '山西': '山西是中国古代文化的重要发祥地之一，拥有平遥古城、五台山等文化遗产，面食文化源远流长。',
+                '内蒙古': '内蒙古拥有壮丽的草原风光，如呼伦贝尔草原、锡林郭勒草原等，蒙古族文化特色鲜明，那达慕大会等传统活动丰富多彩。',
+                '宁夏': '宁夏是中国唯一的回族自治区，拥有西夏王陵、沙坡头景区等景点，沙漠与黄河交织的独特景观令人难忘。',
+                '甘肃': '甘肃是丝绸之路的重要节点，拥有敦煌莫高窟、嘉峪关等世界级文化遗产，河西走廊的自然风光壮丽。',
+                '青海': '青海拥有青海湖、茶卡盐湖等自然奇观，藏族文化浓郁，塔尔寺等宗教圣地吸引着众多信徒和游客。',
+                '西藏': '西藏是中国神秘的高原圣地，拥有布达拉宫、大昭寺等宗教建筑，高原风光壮丽，藏族文化独特而丰富。'
+            };
+            
+            // 生成故事开头
+            let story = `从${startPoint}出发，踏上京藏古道的旅程，目的地是${endPoint}。这次旅行的主题是${travelPurpose}，我期待着在这条古老的驿路上发现不一样的风景和故事。`;
+            
+            // 根据起点和终点添加中间路段的描述
+            const provinces = ['北京', '河北', '山西', '内蒙古', '宁夏', '甘肃', '青海', '西藏'];
+            const startIndex = provinces.indexOf(startPoint);
+            const endIndex = provinces.indexOf(endPoint);
+            
+            if (startIndex < endIndex) {
+                for (let i = startIndex; i <= endIndex; i++) {
+                    const province = provinces[i];
+                    if (province === startPoint) {
+                        story += `\n\n在${province}，${regionFeatures[province]}作为旅程的起点，我在这里感受到了${purposeKeywords[travelPurpose][0]}的魅力。`;
+                    } else if (province === endPoint) {
+                        story += `\n\n终于抵达${province}，${regionFeatures[province]}作为旅程的终点，这里的${purposeKeywords[travelPurpose][1]}让我流连忘返。`;
+                    } else {
+                        story += `\n\n途经${province}，${regionFeatures[province]}在这里，我体验了当地的${purposeKeywords[travelPurpose][2]}，留下了深刻的印象。`;
+                    }
+                }
+            }
+            
+            // 根据旅行目的添加特色内容
+            switch (travelPurpose) {
+                case '文化探索':
+                    story += `\n\n在旅途中，我深入了解了京藏古道沿线的历史文化，从元代的驿路制度到各民族的融合交流，每一步都充满了文化的魅力。特别是在${endPoint}，当地的传统习俗和民间艺术让我感受到了中华文化的博大精深。`;
+                    break;
+                case '自然风光':
+                    story += `\n\n沿途的自然风光让我陶醉不已，从${startPoint}的平原风光到${endPoint}的高原景色，每一处都有独特的自然魅力。特别是在青海湖和青藏高原，壮丽的自然景观让我感受到了大自然的鬼斧神工。`;
+                    break;
+                case '历史古迹':
+                    story += `\n\n作为一名历史爱好者，我在旅途中探访了许多历史古迹，从元代的驿路遗址到各朝代的古建筑，每一处都承载着历史的记忆。特别是在敦煌莫高窟和布达拉宫，精美的艺术作品和丰富的历史信息让我仿佛穿越时空。`;
+                    break;
+                case '宗教文化':
+                    story += `\n\n京藏古道沿线是多种宗教文化的交融之地，从北京的佛教寺庙到西藏的藏传佛教圣地，每一处都彰显着宗教文化的独特魅力。特别是在塔尔寺和大昭寺，我感受到了宗教信仰的力量和宗教艺术的精美。`;
+                    break;
+                case '美食体验':
+                    story += `\n\n作为一名美食爱好者，我在旅途中品尝了各种特色美食，从北京烤鸭到西藏酥油茶，每一道美食都代表着当地的饮食文化。特别是在山西和甘肃，丰富的面食文化和独特的烹饪技艺让我大饱口福。`;
+                    break;
+                case '摄影采风':
+                    story += `\n\n作为一名摄影爱好者，我在旅途中捕捉了许多精彩瞬间，从北京的城市风光到西藏的高原景色，每一处都有独特的摄影价值。特别是在青海湖和茶卡盐湖，独特的光影效果和壮丽的自然风光为我的摄影作品增添了许多精彩画面。`;
+                    break;
+            }
+            
+            // 生成故事结尾
+            story += `\n\n这次京藏古道的旅行让我收获颇丰，不仅欣赏了美丽的风景，还了解了丰富的历史文化。${travelPurpose}的主题让我对这条古老的驿路有了更深入的认识，期待未来有机会再次踏上这段充满魅力的旅程。`;
+            
+            return story;
+        }
+    </script>
 </body>
 </html>
