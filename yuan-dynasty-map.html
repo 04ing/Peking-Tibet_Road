@@ -454,10 +454,18 @@
                 else if (lng < 95 || lat < 32) provinceStats['西藏']++;
             });
             
+            // 过滤掉数量为0的省份
+            var filteredStats = {};
+            for (var province in provinceStats) {
+                if (provinceStats[province] > 0) {
+                    filteredStats[province] = provinceStats[province];
+                }
+            }
+            
             // 更新图表
             if (yuanChart) {
-                var provinces = Object.keys(provinceStats);
-                var stationCounts = Object.values(provinceStats);
+                var provinces = Object.keys(filteredStats);
+                var stationCounts = Object.values(filteredStats);
                 
                 yuanChart.setOption({
                     xAxis: {
