@@ -1,10 +1,10 @@
 /* 自定义横向时间轴样式 */
 .custom-timeline {
     position: relative;
-    padding: 20px 0 40px;
+    padding: 10px 0 30px;
     margin: 10px 0;
     overflow-x: auto;
-    height: 140px;
+    height: 120px;
 }
 
 .timeline-events {
