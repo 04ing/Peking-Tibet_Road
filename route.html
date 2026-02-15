@@ -545,7 +545,9 @@
                 .attr('stroke-dashoffset', 0)
                 .on('end', function() {
                     // 路线显示完成后，添加马匹动画
-                    animateHorse(data.mainRoute);
+                    console.log('路线显示完成，准备开始马匹动画');
+                    // 直接调用马匹动画，不依赖数据传递
+                    animateHorse();
                 });
             
             // 添加主线点击事件
@@ -642,24 +644,31 @@
             });
             
             // 马匹动画函数
-            function animateHorse(route) {
+            function animateHorse() {
                 console.log('开始马匹动画...');
+                console.log('数据是否可用:', data);
+                console.log('主线数据长度:', data.mainRoute.length);
+                
+                // 直接使用data.mainRoute
+                const route = data.mainRoute;
                 
                 // 创建马匹图标
                 const horse = svg.append('g')
                     .attr('class', 'horse')
-                    .style('opacity', 0);
+                    .style('opacity', 1); // 立即显示，不使用过渡
                 
                 // 使用更形象、更大的马匹图标
                 const horseGroup = horse.append('g')
-                    .attr('transform', 'scale(3)');
+                    .attr('transform', 'scale(4)'); // 进一步增大尺寸
                 
                 // 绘制马头
                 horseGroup.append('circle')
                     .attr('cx', 0)
                     .attr('cy', 0)
                     .attr('r', 5)
-                    .style('fill', '#8B4513');
+                    .style('fill', '#8B4513')
+                    .style('stroke', '#000')
+                    .style('stroke-width', 1);
                 
                 // 绘制马身
                 horseGroup.append('ellipse')
@@ -667,7 +676,9 @@
                     .attr('cy', 0)
                     .attr('rx', 10)
                     .attr('ry', 5)
-                    .style('fill', '#8B4513');
+                    .style('fill', '#8B4513')
+                    .style('stroke', '#000')
+                    .style('stroke-width', 1);
                 
                 // 绘制马腿
                 const legs = [[10, 5], [18, 5], [10, 8], [18, 8]];
@@ -718,15 +729,19 @@
                 });
                 
                 console.log('动画点数量:', routePoints.length);
+                console.log('第一个点坐标:', routePoints[0]);
                 
-                // 立即显示马匹
-                horse.style('opacity', 1);
+                // 设置初始位置
+                const firstPoint = routePoints[0];
+                horse.attr('transform', `translate(${firstPoint.x}, ${firstPoint.y}) rotate(0)`);
+                console.log('马匹初始位置设置完成');
                 
                 // 立即开始动画，不等待过渡结束
                 let i = 0;
                 function moveHorse() {
                     if (i < routePoints.length) {
                         const point = routePoints[i];
+                        console.log('移动到点:', i, point);
                         
                         // 计算方向
                         let angle = 0;
@@ -740,7 +755,7 @@
                         
                         i++;
                         // 减慢动画速度
-                        setTimeout(moveHorse, 500);
+                        setTimeout(moveHorse, 1000); // 进一步减慢
                     } else {
                         // 动画结束，隐藏马匹
                         horse.style('opacity', 0);
@@ -749,6 +764,7 @@
                 }
                 
                 // 立即开始动画
+                console.log('准备开始移动动画');
                 moveHorse();
             }
             
