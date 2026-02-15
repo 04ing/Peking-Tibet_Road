@@ -650,13 +650,63 @@
                     .attr('class', 'horse')
                     .style('opacity', 0);
                 
-                // 使用更明显的马匹图标
-                horse.append('path')
-                    .attr('d', 'M0,0 L10,5 L0,10 L-10,5 Z M0,5 L10,15 L0,20 L-10,15 Z')
-                    .style('fill', '#8B4513')
-                    .style('stroke', '#000')
-                    .style('stroke-width', 2)
-                    .attr('transform', 'translate(-5, -10)');
+                // 使用更形象、更大的马匹图标
+                const horseGroup = horse.append('g')
+                    .attr('transform', 'scale(3)');
+                
+                // 绘制马头
+                horseGroup.append('circle')
+                    .attr('cx', 0)
+                    .attr('cy', 0)
+                    .attr('r', 5)
+                    .style('fill', '#8B4513');
+                
+                // 绘制马身
+                horseGroup.append('ellipse')
+                    .attr('cx', 15)
+                    .attr('cy', 0)
+                    .attr('rx', 10)
+                    .attr('ry', 5)
+                    .style('fill', '#8B4513');
+                
+                // 绘制马腿
+                const legs = [[10, 5], [18, 5], [10, 8], [18, 8]];
+                legs.forEach((leg, index) => {
+                    horseGroup.append('line')
+                        .attr('x1', leg[0])
+                        .attr('y1', 0)
+                        .attr('x2', leg[0])
+                        .attr('y2', leg[1])
+                        .style('stroke', '#8B4513')
+                        .style('stroke-width', 2);
+                });
+                
+                // 绘制马尾
+                horseGroup.append('path')
+                    .attr('d', 'M25,0 Q30,-5 28,5')
+                    .style('fill', 'none')
+                    .style('stroke', '#8B4513')
+                    .style('stroke-width', 2);
+                
+                // 绘制马耳
+                horseGroup.append('path')
+                    .attr('d', 'M-3,-5 L-5,-10 L-1,-10 Z')
+                    .style('fill', '#8B4513');
+                horseGroup.append('path')
+                    .attr('d', 'M3,-5 L5,-10 L1,-10 Z')
+                    .style('fill', '#8B4513');
+                
+                // 绘制马眼
+                horseGroup.append('circle')
+                    .attr('cx', -3)
+                    .attr('cy', -2)
+                    .attr('r', 1)
+                    .style('fill', 'white');
+                horseGroup.append('circle')
+                    .attr('cx', 3)
+                    .attr('cy', -2)
+                    .attr('r', 1)
+                    .style('fill', 'white');
                 
                 // 确保路线点数组创建正确
                 console.log('路线点数量:', route.length);
@@ -686,11 +736,11 @@
                         }
                         
                         // 直接更新马匹位置和方向，不使用transition
-                        horse.attr('transform', `translate(${point.x}, ${point.y}) rotate(${angle}) scale(2)`);
+                        horse.attr('transform', `translate(${point.x}, ${point.y}) rotate(${angle})`);
                         
                         i++;
-                        // 使用setTimeout控制动画速度
-                        setTimeout(moveHorse, 200);
+                        // 减慢动画速度
+                        setTimeout(moveHorse, 500);
                     } else {
                         // 动画结束，隐藏马匹
                         horse.style('opacity', 0);
