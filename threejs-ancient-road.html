@@ -286,11 +286,12 @@
     </div>
 
     <!-- Three.js库 -->
-    <script type="module">
-        // 导入Three.js
-        import * as THREE from './node_modules/three/build/three.module.js';
-        import { OrbitControls } from './node_modules/three/examples/jsm/controls/OrbitControls.js';
-        import { FirstPersonControls } from './node_modules/three/examples/jsm/controls/FirstPersonControls.js';
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/FirstPersonControls.js"></script>
+    <script>
+        // 使用全局THREE对象
+        // import语句已替换为CDN脚本引入
 
         // 场景数据 - 模拟数据
         const routeData = {
@@ -642,7 +643,7 @@
         // 创建控件
         function createControls() {
             // 第一人称控件
-            controls = new FirstPersonControls(camera, renderer.domElement);
+            controls = new THREE.FirstPersonControls(camera, renderer.domElement);
             controls.movementSpeed = 10;
             controls.lookSpeed = 0.05;
             controls.lookVertical = true;
