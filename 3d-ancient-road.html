@@ -272,14 +272,6 @@
 
     <!-- Three.js 库 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/FirstPersonControls.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/geometries/ParametricGeometry.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/geometries/ParametricGeometries.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/objects/Water2.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/objects/Sky.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/particles/ParticleSystem.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/particles/ParticleBasicMaterial.js"></script>
 
     <script>
         // 场景数据 - AI生成的模拟数据
@@ -654,15 +646,64 @@
             return Math.sqrt(dx * dx + dz * dz);
         }
 
-        // 创建控件
+        // 简单的第一人称控制
+        let mouseX = 0, mouseY = 0;
+        let moveForward = false, moveBackward = false, moveLeft = false, moveRight = false;
+        
         function createControls() {
-            // 第一人称控件
-            controls = new THREE.FirstPersonControls(camera, renderer.domElement);
-            controls.movementSpeed = 10;
-            controls.lookSpeed = 0.05;
-            controls.lookVertical = true;
-            controls.constrainVertical = true;
-            controls.maxPolarAngle = Math.PI / 2;
+            // 添加鼠标移动事件监听
+            document.addEventListener('mousemove', onMouseMove, false);
+            
+            // 添加键盘事件监听
+            document.addEventListener('keydown', onKeyDown, false);
+            document.addEventListener('keyup', onKeyUp, false);
+        }
+        
+        function onMouseMove(event) {
+            mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+            mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+        }
+        
+        function onKeyDown(event) {
+            switch (event.keyCode) {
+                case 38: // 上箭头
+                case 87: // W
+                    moveForward = true;
+                    break;
+                case 40: // 下箭头
+                case 83: // S
+                    moveBackward = true;
+                    break;
+                case 37: // 左箭头
+                case 65: // A
+                    moveLeft = true;
+                    break;
+                case 39: // 右箭头
+                case 68: // D
+                    moveRight = true;
+                    break;
+            }
+        }
+        
+        function onKeyUp(event) {
+            switch (event.keyCode) {
+                case 38: // 上箭头
+                case 87: // W
+                    moveForward = false;
+                    break;
+                case 40: // 下箭头
+                case 83: // S
+                    moveBackward = false;
+                    break;
+                case 37: // 左箭头
+                case 65: // A
+                    moveLeft = false;
+                    break;
+                case 39: // 右箭头
+                case 68: // D
+                    moveRight = false;
+                    break;
+            }
         }
 
         // 添加路标点
@@ -898,10 +939,27 @@
                     document.getElementById('start-btn').textContent = '开始漫游';
                     document.getElementById('status-text').textContent = '已到达终点: 拉萨';
                 }
-            }
-            
-            if (controls) {
-                controls.update();
+            } else {
+                // 处理键盘控制
+                const moveSpeed = 0.1;
+                const direction = new THREE.Vector3();
+                
+                if (moveForward) direction.z -= moveSpeed;
+                if (moveBackward) direction.z += moveSpeed;
+                if (moveLeft) direction.x -= moveSpeed;
+                if (moveRight) direction.x += moveSpeed;
+                
+                direction.normalize();
+                
+                // 更新相机位置
+                camera.position.add(direction);
+                
+                // 更新鼠标视角
+                camera.rotation.y += mouseX * 0.01;
+                camera.rotation.x += mouseY * 0.01;
+                
+                // 限制垂直视角
+                camera.rotation.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, camera.rotation.x));
             }
             
             renderer.render(scene, camera);
