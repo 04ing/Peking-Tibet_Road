@@ -29,3 +29,9 @@ Thumbs.db
 
 # 日志文件
 *.log
+
+# 依赖目录
+node_modules/
+
+# 包管理文件
+package-lock.json

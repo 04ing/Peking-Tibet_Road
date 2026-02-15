@@ -1,0 +1,21 @@
+{
+  "name": "peking-tibet-ancient-road",
+  "version": "1.0.0",
+  "description": "Beijing-Tibet Ancient Road Project",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "ancient road",
+    "beijing-tibet",
+    "history",
+    "culture"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "three": "^0.128.0",
+    "d3": "^7.8.5"
+  }
+}
