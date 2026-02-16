@@ -6,6 +6,11 @@
 
 ## 最新更新
 
+- **2026-02-16**：调整路线数据中的站点坐标，确保所有站点都在对应的路线上
+- **2026-02-15**：添加路线点击显示信息功能，并为各支线上添加站点
+- **2026-02-15**：修复车辆动画循环逻辑，确保小车从起点运动到终点后正确重新开始
+- **2026-02-15**：修改车辆移动速度，使其更慢、更平滑
+- **2026-02-15**：从 JSON 文件加载路线和节点数据，实现数据与代码分离
 - **2026-02-12**：修复历史事件时间轴在 GitHub Pages 上的显示问题，优化页面加载速度
 - **2026-02-11**：添加线性文化遗产页面的古墓葬图标显示功能
 - **2026-02-10**：优化时间轴样式，使用棕色主轴、黄色事件点和绿色五角星重要事件标记
@@ -42,6 +47,7 @@
 
 - **前端**：HTML5, CSS3, JavaScript
 - **地图可视化**：Leaflet.js, 高德地图 API
+- **数据可视化**：D3.js
 - **时间轴可视化**：Vis.js
 - **数据处理**：Fetch API, JSON
 - **样式设计**：自定义 CSS, Font Awesome 图标库
@@ -58,16 +64,28 @@
 ├── yuan-dynasty-map.html   # 元代地图页面
 ├── artifacts_map.html      # 文物分布地图页面
 ├── dataset-archaeology.html # 考古遗址数据集页面
+├── dataset-history.html    # 历史文献数据集页面
+├── dataset-images.html     # 图像数据集页面
+├── dataset-geography.html  # 地理数据集页面
+├── pdf-viewer.html         # PDF 查看器页面
 ├── css/                    # 样式文件
 │   ├── style.css           # 主样式文件
-│   └── travel.css          # 旅游攻略页面样式
+│   ├── travel.css          # 旅游攻略页面样式
+│   ├── heritage.css        # 线性文化遗产页面样式
+│   ├── timeline.css        # 时间轴样式
+│   └── pdf-viewer.css      # PDF 查看器样式
 ├── js/                     # JavaScript 文件
 │   └── main.js             # 主脚本文件
 ├── json/                   # JSON 数据文件
 │   ├── route-data.json     # 路线数据
-│   └── cultural-relics.json # 文化遗产数据
+│   ├── cultural-relics.json # 文化遗产数据
+│   └── Inheritors.geojson  # 传承人数据
 ├── img/                    # 图片文件
-│   └── 古墓.png            # 古墓葬图标
+│   ├── 古墓.png            # 古墓葬图标
+│   ├── 0a8b2cf28f9e7b68642454ee9cb2562c_c4c938cb-954f-495e-9860-cd1097844177.jpg
+│   └── f7e2361cc2156a23ae21dbc11f3a85db_14d3d4ea-b6e3-4929-8d3c-86092c9e7f76.jpg
+├── package.json            # 项目配置文件
+├── .gitignore              # Git 忽略文件
 └── README.md               # 项目说明文件
 ```
 
