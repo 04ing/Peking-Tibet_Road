@@ -93,9 +93,44 @@
                 </div>
                 <div id="route-result" style="margin-top: 20px;"></div>
             </div>
+            
+            <div class="data-download" style="margin-bottom: 30px; padding: 20px; background-color: #f9f9f9; border-radius: 8px;">
+                <h3>数据下载</h3>
+                <p>下载京藏古道相关数据，用于研究和分析</p>
+                <div class="download-buttons">
+                    <a href="json/route-data.json" download="route-data.json" class="btn-secondary">
+                        <i class="fas fa-download"></i> 路线数据 (JSON)
+                    </a>
+                    <a href="json/cultural-relics.json" download="cultural-relics.json" class="btn-secondary">
+                        <i class="fas fa-download"></i> 文化遗产数据 (JSON)
+                    </a>
+                    <a href="json/Inheritors.geojson" download="Inheritors.geojson" class="btn-secondary">
+                        <i class="fas fa-download"></i> 传承人数据 (GeoJSON)
+                    </a>
+                </div>
+            </div>
             <div class="route-map" style="height: 600px; margin-bottom: 30px; position: relative;">
                 <div id="amap-container" style="width: 100%; height: 100%;"></div>
                 <div id="d3-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></div>
+            </div>
+            
+            <div class="timeline-container" style="margin-bottom: 30px; padding: 20px; background-color: #f9f9f9; border-radius: 8px;">
+                <h3>历史时间轴</h3>
+                <p>探索京藏古道在不同历史时期的变化</p>
+                <div id="timeline" style="height: 200px; margin-top: 20px;"></div>
+                <div id="timeline-info" style="margin-top: 20px; padding: 15px; background-color: #fff; border-radius: 5px; border-left: 4px solid #8B4513;"></div>
+            </div>
+            
+            <div class="seasonal-impact" style="margin-bottom: 30px; padding: 20px; background-color: #f9f9f9; border-radius: 8px;">
+                <h3>季节影响可视化</h3>
+                <p>了解不同季节对京藏古道路线的影响</p>
+                <div class="season-buttons">
+                    <button class="season-btn" data-season="spring">春季</button>
+                    <button class="season-btn" data-season="summer">夏季</button>
+                    <button class="season-btn" data-season="autumn">秋季</button>
+                    <button class="season-btn" data-season="winter">冬季</button>
+                </div>
+                <div id="seasonal-info" style="margin-top: 20px; padding: 15px; background-color: #fff; border-radius: 5px; border-left: 4px solid #8B4513;"></div>
             </div>
             <div class="route-details">
                 <div class="route-section">
@@ -286,16 +321,16 @@
             });
 
             // 添加主线
-            const mainPolyline = new AMap.Polyline({
+            window.mainPolyline = new AMap.Polyline({
                 path: routeData.mainRoute,
                 strokeColor: '#1890ff',
                 strokeWeight: 5,
                 strokeOpacity: 0.8
             });
-            map.add(mainPolyline);
+            map.add(window.mainPolyline);
 
             // 添加主线点击事件
-            mainPolyline.on('click', function() {
+            window.mainPolyline.on('click', function() {
                 const infoWindow = new AMap.InfoWindow({
                     content: `<h3>京藏古道主线</h3><p>从北京出发，经大同、兰州、西宁至拉萨，全长约3500公里，是元代连接中原与西藏的重要交通要道。</p>`,
                     offset: new AMap.Pixel(0, -30)
@@ -588,7 +623,226 @@
             document.getElementById('plan-route-btn').addEventListener('click', function() {
                 planRoute(map);
             });
+            
+            // 初始化时间轴
+            initTimeline();
+            
+            // 初始化季节影响可视化
+            initSeasonalImpact(map);
         };
+
+        // 初始化时间轴
+        function initTimeline() {
+            // 历史事件数据
+            const timelineData = [
+                {
+                    year: 1271,
+                    event: "元朝建立",
+                    description: "忽必烈建立元朝，定都大都（今北京），开始构建连接中原与西藏的驿路系统。"
+                },
+                {
+                    year: 1292,
+                    event: "京藏古道初步形成",
+                    description: "元朝政府正式设立从大都（今北京）至西藏的驿路，成为京藏古道的雏形。"
+                },
+                {
+                    year: 1368,
+                    event: "明朝建立",
+                    description: "明朝取代元朝，京藏古道继续作为连接中原与西藏的重要通道。"
+                },
+                {
+                    year: 1644,
+                    event: "清朝建立",
+                    description: "清朝进一步完善京藏古道，增设驿站，改善路况，使其成为重要的官道。"
+                },
+                {
+                    year: 1912,
+                    event: "中华民国建立",
+                    description: "中华民国时期，京藏古道逐渐被现代公路所取代，但仍作为民间交通要道。"
+                },
+                {
+                    year: 1954,
+                    event: "青藏公路通车",
+                    description: "青藏公路正式通车，标志着现代交通对传统京藏古道的全面替代。"
+                },
+                {
+                    year: 2026,
+                    event: "京藏古道数字化",
+                    description: "京藏古道人文环境时空信息开放平台建立，通过数字化技术重现古道历史风貌。"
+                }
+            ];
+            
+            // 渲染时间轴
+            const timeline = document.getElementById('timeline');
+            const timelineInfo = document.getElementById('timeline-info');
+            
+            // 清空时间轴内容
+            timeline.innerHTML = '';
+            
+            // 计算时间轴的宽度和每个事件的位置
+            const timelineWidth = timeline.clientWidth;
+            const minYear = Math.min(...timelineData.map(item => item.year));
+            const maxYear = Math.max(...timelineData.map(item => item.year));
+            const yearRange = maxYear - minYear;
+            
+            // 创建时间轴主线
+            const timelineLine = document.createElement('div');
+            timelineLine.style.position = 'absolute';
+            timelineLine.style.top = '50%';
+            timelineLine.style.left = '0';
+            timelineLine.style.width = '100%';
+            timelineLine.style.height = '2px';
+            timelineLine.style.backgroundColor = '#8B4513';
+            timeline.appendChild(timelineLine);
+            
+            // 添加事件点
+            timelineData.forEach((item, index) => {
+                const eventPosition = ((item.year - minYear) / yearRange) * 100;
+                
+                // 创建事件点
+                const eventDot = document.createElement('div');
+                eventDot.style.position = 'absolute';
+                eventDot.style.top = '50%';
+                eventDot.style.left = `${eventPosition}%`;
+                eventDot.style.transform = 'translate(-50%, -50%)';
+                eventDot.style.width = '12px';
+                eventDot.style.height = '12px';
+                eventDot.style.borderRadius = '50%';
+                eventDot.style.backgroundColor = '#8B4513';
+                eventDot.style.cursor = 'pointer';
+                eventDot.style.zIndex = '10';
+                eventDot.dataset.index = index;
+                timeline.appendChild(eventDot);
+                
+                // 创建年份标签
+                const yearLabel = document.createElement('div');
+                yearLabel.style.position = 'absolute';
+                yearLabel.style.top = '60%';
+                yearLabel.style.left = `${eventPosition}%`;
+                yearLabel.style.transform = 'translate(-50%, 0)';
+                yearLabel.style.fontSize = '12px';
+                yearLabel.style.color = '#333';
+                yearLabel.textContent = item.year;
+                timeline.appendChild(yearLabel);
+                
+                // 添加点击事件
+                eventDot.addEventListener('click', function() {
+                    const eventIndex = parseInt(this.dataset.index);
+                    const eventData = timelineData[eventIndex];
+                    
+                    // 显示事件信息
+                    timelineInfo.innerHTML = `
+                        <h4>${eventData.year}年 - ${eventData.event}</h4>
+                        <p>${eventData.description}</p>
+                    `;
+                    
+                    // 高亮当前事件点
+                    document.querySelectorAll('#timeline div').forEach(el => {
+                        if (el.style.borderRadius === '50%') {
+                            el.style.backgroundColor = '#8B4513';
+                            el.style.width = '12px';
+                            el.style.height = '12px';
+                        }
+                    });
+                    
+                    eventDot.style.backgroundColor = '#D2B48C';
+                    eventDot.style.width = '16px';
+                    eventDot.style.height = '16px';
+                });
+            });
+            
+            // 显示默认事件信息
+            if (timelineData.length > 0) {
+                timelineInfo.innerHTML = `
+                    <h4>${timelineData[0].year}年 - ${timelineData[0].event}</h4>
+                    <p>${timelineData[0].description}</p>
+                `;
+            }
+        }
+
+        // 初始化季节影响可视化
+        function initSeasonalImpact(map) {
+            // 季节数据
+            const seasonalData = {
+                spring: {
+                    title: "春季",
+                    description: "春季是京藏古道的最佳旅行季节之一。气温适中，大地复苏，沿途桃花、杏花盛开，景色宜人。",
+                    impacts: [
+                        "优点：气温适宜，景色优美，道路畅通",
+                        "缺点：部分路段可能有春汛，需注意安全",
+                        "建议：携带轻便衣物，注意防晒"
+                    ],
+                    color: "#52c41a"
+                },
+                summer: {
+                    title: "夏季",
+                    description: "夏季京藏古道气温较高，尤其是东段地区。西段青藏高原部分气候凉爽，是避暑的好去处。",
+                    impacts: [
+                        "优点：道路条件良好，通行便利",
+                        "缺点：东段地区炎热，西段可能有雷雨天气",
+                        "建议：携带防晒用品，注意高原反应"
+                    ],
+                    color: "#1890ff"
+                },
+                autumn: {
+                    title: "秋季",
+                    description: "秋季是京藏古道的黄金旅行季节。天空湛蓝，层林尽染，沿途风景如诗如画。",
+                    impacts: [
+                        "优点：天气晴朗，景色壮美，气温适宜",
+                        "缺点：部分路段可能有秋雨，道路湿滑",
+                        "建议：携带雨具，注意行车安全"
+                    ],
+                    color: "#fa8c16"
+                },
+                winter: {
+                    title: "冬季",
+                    description: "冬季京藏古道气候寒冷，尤其是西段青藏高原地区。部分路段可能积雪结冰，通行困难。",
+                    impacts: [
+                        "优点：游客稀少，可体验独特的冬季景观",
+                        "缺点：气温寒冷，道路可能结冰，通行不便",
+                        "建议：携带保暖衣物，使用防滑设备，注意安全"
+                    ],
+                    color: "#722ed1"
+                }
+            };
+            
+            // 获取季节按钮
+            const seasonButtons = document.querySelectorAll('.season-btn');
+            const seasonalInfo = document.getElementById('seasonal-info');
+            
+            // 添加点击事件
+            seasonButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const season = this.dataset.season;
+                    const seasonData = seasonalData[season];
+                    
+                    // 显示季节信息
+                    seasonalInfo.innerHTML = `
+                        <h4>${seasonData.title}</h4>
+                        <p>${seasonData.description}</p>
+                        <ul>
+                            ${seasonData.impacts.map(impact => `<li>${impact}</li>`).join('')}
+                        </ul>
+                    `;
+                    
+                    // 高亮当前按钮
+                    seasonButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // 更新地图路线颜色
+                    if (window.mainPolyline) {
+                        window.mainPolyline.setStyle({
+                            strokeColor: seasonData.color
+                        });
+                    }
+                });
+            });
+            
+            // 默认显示春季
+            if (seasonButtons.length > 0) {
+                seasonButtons[0].click();
+            }
+        }
 
         // 初始化下拉选项
         function initDropdownOptions() {

@@ -253,6 +253,76 @@ nav {
     margin-top: 10px;
 }
 
+/* 数据下载样式 */
+.data-download .download-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.btn-secondary {
+    display: inline-block;
+    background-color: #A0522D;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    text-decoration: none;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-secondary:hover {
+    background-color: #8B4513;
+}
+
+/* 时间轴样式 */
+.timeline-container {
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+}
+
+#timeline {
+    height: 200px;
+    margin-top: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+/* 季节影响样式 */
+.seasonal-impact .season-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.season-btn {
+    background-color: #8B4513;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.season-btn:hover {
+    background-color: #A0522D;
+}
+
+.season-btn.active {
+    background-color: #D2B48C;
+    color: #333;
+}
+
 /* 英雄区域 */
 .hero {
     background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=ancient%20Chinese%20mountain%20landscape%20with%20traditional%20path%20from%20Beijing%20to%20Tibet%2C%20historical%20scenery%20with%20mountains%20and%20rivers&image_size=landscape_16_9') no-repeat center center;
