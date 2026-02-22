@@ -280,21 +280,7 @@ nav {
     background-color: #8B4513;
 }
 
-/* 时间轴样式 */
-.timeline-container {
-    margin-bottom: 30px;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-}
 
-#timeline {
-    height: 200px;
-    margin-top: 20px;
-    background-color: #fff;
-    border-radius: 5px;
-    padding: 10px;
-}
 
 /* 季节影响样式 */
 .seasonal-impact .season-buttons {
