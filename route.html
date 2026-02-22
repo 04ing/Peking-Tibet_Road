@@ -767,6 +767,12 @@
             if (window.plannedRoute) {
                 window.plannedRoute.remove();
             }
+            if (window.startToRoadLine) {
+                window.startToRoadLine.remove();
+            }
+            if (window.endToRoadLine) {
+                window.endToRoadLine.remove();
+            }
             
             // 使用高德地图的路线规划API
             AMap.plugin(['AMap.Driving', 'AMap.Geocoder'], function() {
@@ -813,8 +819,9 @@
                         // 调整地图视野
                         map.setFitView();
                     } else {
-                        // 路线规划失败，使用直线距离作为备选方案
-                        const geocoder = new AMap.Geocoder();
+                        // 路线规划失败，使用最近路网点的方法
+                        // 这里简化处理，使用直线距离作为备选方案
+                        // 实际项目中可以使用 AMap.RoadInfoSearch 服务查找最近的路网点
                         
                         // 计算起点到终点的直线距离
                         const directDistance = start.distance(end) / 1000; // 转换为公里
