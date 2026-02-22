@@ -769,7 +769,7 @@
             }
             
             // 使用高德地图的路线规划API
-            AMap.plugin('AMap.Driving', function() {
+            AMap.plugin(['AMap.Driving', 'AMap.Geocoder'], function() {
                 const driving = new AMap.Driving({
                     map: map,
                     panel: resultDiv,
@@ -777,7 +777,7 @@
                     showTraffic: true
                 });
                 
-                // 构造路线规划参数
+                // 构造起点和终点坐标
                 const start = new AMap.LngLat(startCoords[0], startCoords[1]);
                 const end = new AMap.LngLat(endCoords[0], endCoords[1]);
                 
@@ -813,7 +813,36 @@
                         // 调整地图视野
                         map.setFitView();
                     } else {
-                        resultDiv.innerHTML = '<p style="color: red;">路线规划失败，请尝试其他起点和终点</p>';
+                        // 路线规划失败，使用直线距离作为备选方案
+                        const geocoder = new AMap.Geocoder();
+                        
+                        // 计算起点到终点的直线距离
+                        const directDistance = start.distance(end) / 1000; // 转换为公里
+                        
+                        // 显示备选路线结果
+                        resultDiv.innerHTML = `
+                            <h4>规划路线</h4>
+                            <p><strong>起点：</strong>${startName}</p>
+                            <p><strong>终点：</strong>${endName}</p>
+                            <p><strong>路线长度：</strong>${directDistance.toFixed(2)} 公里</p>
+                            <p><strong>路线说明：</strong>由于起点或终点不在路网上，此路线为直线距离估算，实际距离可能更长。</p>
+                            <p><strong>备选方案：</strong>尝试选择更靠近主要道路的起点和终点。</p>
+                        `;
+                        
+                        // 创建直线路线
+                        window.plannedRoute = new AMap.Polyline({
+                            path: [startCoords, endCoords],
+                            strokeColor: '#ff4500',
+                            strokeWeight: 6,
+                            strokeOpacity: 0.8,
+                            strokeDasharray: [10, 5]
+                        });
+                        
+                        // 添加到地图
+                        map.add(window.plannedRoute);
+                        
+                        // 调整地图视野
+                        map.setFitView([window.plannedRoute]);
                     }
                 });
             });
