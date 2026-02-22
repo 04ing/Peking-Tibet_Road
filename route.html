@@ -326,6 +326,14 @@
                 strokeOpacity: 0.8
             });
             map.add(window.mainPolyline);
+            
+            // 确保 mainPolyline 有 setStrokeColor 方法
+            if (!window.mainPolyline.setStrokeColor) {
+                window.mainPolyline.setStrokeColor = function(color) {
+                    this.setOptions({ strokeColor: color });
+                    this.show();
+                };
+            }
 
             // 添加主线点击事件
             window.mainPolyline.on('click', function() {
@@ -698,10 +706,11 @@
                     this.classList.add('active');
                     
                     // 更新地图路线颜色
-                    if (window.mainPolyline) {
-                        window.mainPolyline.setStyle({
-                            strokeColor: seasonData.color
-                        });
+                    if (window.mainPolyline && window.mainPolyline.setStrokeColor) {
+                        window.mainPolyline.setStrokeColor(seasonData.color);
+                    } else if (window.mainPolyline) {
+                        // 兼容处理，确保不会报错
+                        console.log('mainPolyline 不支持 setStrokeColor 方法');
                     }
                 });
             });
@@ -774,84 +783,177 @@
                 window.endToRoadLine.remove();
             }
             
+            // 显示加载状态
+            resultDiv.innerHTML = '<p style="color: blue;">正在规划路线，请稍候...</p>';
+            
             // 使用高德地图的路线规划API
-            AMap.plugin(['AMap.Driving', 'AMap.Geocoder'], function() {
+            AMap.plugin(['AMap.Driving', 'AMap.Geocoder', 'AMap.Riding', 'AMap.Walking'], function() {
                 const driving = new AMap.Driving({
                     map: map,
                     panel: resultDiv,
                     hideMarkers: true,
                     showTraffic: true
                 });
+                const geocoder = new AMap.Geocoder();
+                const riding = new AMap.Riding({
+                    map: map,
+                    hideMarkers: true
+                });
+                const walking = new AMap.Walking({
+                    map: map,
+                    hideMarkers: true
+                });
                 
                 // 构造起点和终点坐标
                 const start = new AMap.LngLat(startCoords[0], startCoords[1]);
                 const end = new AMap.LngLat(endCoords[0], endCoords[1]);
                 
-                // 执行路线规划
-                driving.search(start, end, function(status, result) {
-                    if (status === 'complete') {
-                        // 获取规划结果
-                        const route = result.routes[0];
-                        const distance = route.distance / 1000; // 转换为公里
-                        const duration = route.duration / 60; // 转换为分钟
-                        const steps = route.steps;
-                        
-                        // 提取途经点
-                        const waypoints = [];
-                        steps.forEach(step => {
-                            waypoints.push(step.road);
-                        });
-                        
-                        // 显示路线结果
-                        resultDiv.innerHTML = `
-                            <h4>规划路线</h4>
-                            <p><strong>起点：</strong>${startName}</p>
-                            <p><strong>终点：</strong>${endName}</p>
-                            <p><strong>路线长度：</strong>${distance.toFixed(2)} 公里</p>
-                            <p><strong>预计时间：</strong>${duration.toFixed(0)} 分钟</p>
-                            <p><strong>路线说明：</strong>此路线基于现代路网计算，实际古道路线可能有所不同。</p>
-                            <p><strong>途经道路：</strong></p>
-                            <ul>
-                                ${waypoints.filter((value, index, self) => self.indexOf(value) === index).map(waypoint => `<li>${waypoint}</li>`).join('')}
-                            </ul>
-                        `;
-                        
-                        // 调整地图视野
-                        map.setFitView();
-                    } else {
-                        // 路线规划失败，使用最近路网点的方法
-                        // 这里简化处理，使用直线距离作为备选方案
-                        // 实际项目中可以使用 AMap.RoadInfoSearch 服务查找最近的路网点
-                        
-                        // 计算起点到终点的直线距离
-                        const directDistance = start.distance(end) / 1000; // 转换为公里
-                        
-                        // 显示备选路线结果
-                        resultDiv.innerHTML = `
-                            <h4>规划路线</h4>
-                            <p><strong>起点：</strong>${startName}</p>
-                            <p><strong>终点：</strong>${endName}</p>
-                            <p><strong>路线长度：</strong>${directDistance.toFixed(2)} 公里</p>
-                            <p><strong>路线说明：</strong>由于起点或终点不在路网上，此路线为直线距离估算，实际距离可能更长。</p>
-                            <p><strong>备选方案：</strong>尝试选择更靠近主要道路的起点和终点。</p>
-                        `;
-                        
-                        // 创建直线路线
-                        window.plannedRoute = new AMap.Polyline({
-                            path: [startCoords, endCoords],
-                            strokeColor: '#ff4500',
-                            strokeWeight: 6,
-                            strokeOpacity: 0.8,
-                            strokeDasharray: [10, 5]
-                        });
-                        
-                        // 添加到地图
-                        map.add(window.plannedRoute);
-                        
-                        // 调整地图视野
-                        map.setFitView([window.plannedRoute]);
-                    }
-                });
+                // 尝试不同的路线规划方式
+                function tryDriving() {
+                    driving.search(start, end, function(status, result) {
+                        if (status === 'complete') {
+                            // 获取规划结果
+                            const route = result.routes[0];
+                            const distance = route.distance / 1000; // 转换为公里
+                            const duration = route.duration / 60; // 转换为分钟
+                            const steps = route.steps;
+                            
+                            // 提取途经点
+                            const waypoints = [];
+                            steps.forEach(step => {
+                                if (step.road) {
+                                    waypoints.push(step.road);
+                                }
+                            });
+                            
+                            // 显示路线结果
+                            resultDiv.innerHTML = `
+                                <h4>规划路线</h4>
+                                <p><strong>起点：</strong>${startName}</p>
+                                <p><strong>终点：</strong>${endName}</p>
+                                <p><strong>路线长度：</strong>${distance.toFixed(2)} 公里</p>
+                                <p><strong>预计时间：</strong>${duration.toFixed(0)} 分钟</p>
+                                <p><strong>路线说明：</strong>此路线基于现代驾车路网计算，实际古道路线可能有所不同。</p>
+                                <p><strong>途经道路：</strong></p>
+                                <ul>
+                                    ${waypoints.filter((value, index, self) => self.indexOf(value) === index).map(waypoint => `<li>${waypoint}</li>`).join('')}
+                                </ul>
+                            `;
+                            
+                            // 调整地图视野
+                            map.setFitView();
+                        } else {
+                            console.log('驾车路线规划失败，尝试骑行路线规划');
+                            tryRiding();
+                        }
+                    });
+                }
+                
+                function tryRiding() {
+                    riding.search(start, end, function(ridingStatus, ridingResult) {
+                        if (ridingStatus === 'complete') {
+                            const route = ridingResult.routes[0];
+                            const distance = route.distance / 1000; // 转换为公里
+                            const duration = route.duration / 60; // 转换为分钟
+                            const steps = route.steps;
+                            
+                            // 提取途经点
+                            const waypoints = [];
+                            steps.forEach(step => {
+                                if (step.road) {
+                                    waypoints.push(step.road);
+                                }
+                            });
+                            
+                            // 显示路线结果
+                            resultDiv.innerHTML = `
+                                <h4>规划路线</h4>
+                                <p><strong>起点：</strong>${startName}</p>
+                                <p><strong>终点：</strong>${endName}</p>
+                                <p><strong>路线长度：</strong>${distance.toFixed(2)} 公里</p>
+                                <p><strong>预计时间：</strong>${duration.toFixed(0)} 分钟</p>
+                                <p><strong>路线说明：</strong>此路线基于骑行路网计算，实际古道路线可能有所不同。</p>
+                                <p><strong>途经道路：</strong></p>
+                                <ul>
+                                    ${waypoints.filter((value, index, self) => self.indexOf(value) === index).map(waypoint => `<li>${waypoint}</li>`).join('')}
+                                </ul>
+                            `;
+                            
+                            // 调整地图视野
+                            map.setFitView();
+                        } else {
+                            console.log('骑行路线规划失败，尝试步行路线规划');
+                            tryWalking();
+                        }
+                    });
+                }
+                
+                function tryWalking() {
+                    walking.search(start, end, function(walkingStatus, walkingResult) {
+                        if (walkingStatus === 'complete') {
+                            const route = walkingResult.routes[0];
+                            const distance = route.distance / 1000; // 转换为公里
+                            const duration = route.duration / 60; // 转换为分钟
+                            const steps = route.steps;
+                            
+                            // 提取途经点
+                            const waypoints = [];
+                            steps.forEach(step => {
+                                if (step.road) {
+                                    waypoints.push(step.road);
+                                }
+                            });
+                            
+                            // 显示路线结果
+                            resultDiv.innerHTML = `
+                                <h4>规划路线</h4>
+                                <p><strong>起点：</strong>${startName}</p>
+                                <p><strong>终点：</strong>${endName}</p>
+                                <p><strong>路线长度：</strong>${distance.toFixed(2)} 公里</p>
+                                <p><strong>预计时间：</strong>${duration.toFixed(0)} 分钟</p>
+                                <p><strong>路线说明：</strong>此路线基于步行路网计算，实际古道路线可能有所不同。</p>
+                                <p><strong>途经道路：</strong></p>
+                                <ul>
+                                    ${waypoints.filter((value, index, self) => self.indexOf(value) === index).map(waypoint => `<li>${waypoint}</li>`).join('')}
+                                </ul>
+                            `;
+                            
+                            // 调整地图视野
+                            map.setFitView();
+                        } else {
+                            console.log('所有路线规划失败，使用直线距离计算');
+                            // 路线规划失败，使用直线连接并计算距离
+                            // 计算直线距离
+                            const straightDistance = start.distance(end) / 1000; // 转换为公里
+                            
+                            // 显示路线结果
+                            resultDiv.innerHTML = `
+                                <h4>规划路线</h4>
+                                <p><strong>起点：</strong>${startName}</p>
+                                <p><strong>终点：</strong>${endName}</p>
+                                <p><strong>路线长度：</strong>${straightDistance.toFixed(2)} 公里</p>
+                                <p><strong>路线说明：</strong>由于无法获取路网数据，使用直线距离计算。实际古道路线可能有所不同。</p>
+                                <p><strong>可能原因：</strong>起点或终点距离路网较远，或地区路网数据不完善。</p>
+                            `;
+                            
+                            // 创建直线路线
+                            window.plannedRoute = new AMap.Polyline({
+                                path: [startCoords, endCoords],
+                                strokeColor: '#ff4500',
+                                strokeWeight: 6,
+                                strokeOpacity: 0.8,
+                                strokeDasharray: [10, 5]
+                            });
+                            map.add(window.plannedRoute);
+                            
+                            // 调整地图视野
+                            map.setFitView([window.plannedRoute]);
+                        }
+                    });
+                }
+                
+                // 开始尝试路线规划
+                tryDriving();
             });
         }
 
