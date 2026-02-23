@@ -1,11 +1,9 @@
 # 视频文件
-*.mp4
 *.avi
 *.mov
 *.wmv
 
 # PDF文件
-*.pdf
 
 # 其他大型文件
 *.zip
