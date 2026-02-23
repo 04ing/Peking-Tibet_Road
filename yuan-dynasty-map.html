@@ -2,42 +2,18 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>元朝京藏古道地图</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>元朝京藏古道地图 - 京藏古道人文环境时空信息开放平台</title>
     <!-- 统一使用Leaflet 1.9.4版本 -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <!-- 引入外部CSS文件 -->
     <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <!-- 引入D3.js库 -->
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
         /* 自定义样式 */
-        .top-bar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background-color: #8B4513;
-            color: white;
-            padding: 10px 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        
-        .back-button, .comparison-button {
-            background-color: #D2B48C;
-            color: #8B4513;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        
-        .back-button:hover, .comparison-button:hover {
-            background-color: #CD853F;
-        }
-        
-        .top-bar-title {
-            text-align: center;
             flex: 1;
         }
         
@@ -103,12 +79,37 @@
     </style>
 </head>
 <body>
-    <!-- 顶部栏 -->
-    <div class="top-bar">
+    <!-- 顶部导航栏 -->
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1>京藏古道人文环境时空信息开放平台</h1>
+                <p>元代北京至西藏的驿路文明</p>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">首页</a></li>
+                    <li><a href="index.html#explore">古道探索</a></li>
+                    <li><a href="index.html#map" class="active">地图展示</a></li>
+                    <li><a href="index.html#dataset">数据集</a></li>
+                    <li><a href="culture.html">文化内涵</a></li>
+                    <li><a href="travel.html">旅游攻略</a></li>
+                    <li><a href="index.html#about">关于平台</a></li>
+                </ul>
+                <div class="search-container">
+                    <input type="text" id="search-input" placeholder="搜索...">
+                    <button id="search-button"><i class="fas fa-search"></i></button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 地图控制栏 -->
+    <div class="top-bar" style="display: flex; align-items: center; justify-content: space-between; background-color: #8B4513; color: white; padding: 10px 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
         <button class="back-button" id="back-button">返回</button>
-        <div class="top-bar-title">
-            <h1 class="main-title">元朝京藏古道地图</h1>
-            <p class="subtitle">基于元代北京至西藏驿路的历史地理信息可视化</p>
+        <div class="top-bar-title" style="flex: 1; text-align: center;">
+            <h1 class="main-title" style="margin: 0; font-size: 24px;">元朝京藏古道地图</h1>
+            <p class="subtitle" style="margin: 5px 0 0 0; font-size: 14px; opacity: 0.9;">基于元代北京至西藏驿路的历史地理信息可视化</p>
         </div>
         <button class="comparison-button" id="info-button">地图信息</button>
     </div>
