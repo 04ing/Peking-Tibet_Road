@@ -174,10 +174,10 @@ window.addEventListener('load', function() {
 
 // 初始化高德地图
 function initAmap() {
-    // 检查是否是route.html页面，如果是则跳过初始化（route.html有自己的地图初始化）
+    // 检查是否是route.html或heritage.html页面，如果是则跳过初始化（这些页面有自己的地图初始化）
     const currentPage = window.location.pathname;
-    if (currentPage.includes('route.html')) {
-        console.log('This is route.html, skipping map initialization (route.html has its own map initialization)');
+    if (currentPage.includes('route.html') || currentPage.includes('heritage.html')) {
+        console.log(`This is ${currentPage.includes('route.html') ? 'route.html' : 'heritage.html'}, skipping map initialization (this page has its own map initialization)`);
         return;
     }
     

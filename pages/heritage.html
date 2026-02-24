@@ -20,14 +20,14 @@
             </div>
             <nav>
                 <ul>
-                    <li><a href="../../index.html">首页</a></li>
-                    <li><a href="../../index.html#explore">古道探索</a></li>
-                    <li><a href="../../index.html#map">地图展示</a></li>
-                    <li><a href="../../index.html#dataset">数据集</a></li>
+                    <li><a href="../index.html">首页</a></li>
+                    <li><a href="../index.html#explore">古道探索</a></li>
+                    <li><a href="../index.html#map">地图展示</a></li>
+                    <li><a href="../index.html#dataset">数据集</a></li>
                     <li><a href="culture.html">文化内涵</a></li>
                     <li><a href="heritage.html" class="active">线性文化遗产</a></li>
                     <li><a href="travel.html">旅游攻略</a></li>
-                    <li><a href="../../index.html#about">关于平台</a></li>
+                    <li><a href="../index.html#about">关于平台</a></li>
                 </ul>
                 <div class="search-container">
                     <input type="text" id="search-input" placeholder="搜索...">
@@ -386,7 +386,7 @@
                         // 根据文物类型选择图标
                         let iconUrl = 'https://a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-default.png';
                         if (item.cultural_relic_type && item.cultural_relic_type.includes('古墓葬')) {
-                            iconUrl = 'img/古墓.png';
+                            iconUrl = '../img/古墓.png';
                         }
                         
                         // 创建标记
