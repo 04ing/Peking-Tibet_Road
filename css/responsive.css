@@ -1,0 +1,332 @@
+/* 响应式设计 */
+@media (max-width: 1200px) {
+    .logo h1 {
+        font-size: 18px;
+    }
+    
+    nav ul li {
+        margin-left: 10px;
+    }
+    
+    nav ul li a {
+        font-size: 13px;
+    }
+    
+    #search-input {
+        width: 100px;
+    }
+    
+    #search-input:focus {
+        width: 140px;
+    }
+    
+    .culture-intro-content {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 992px) {
+    .logo h1 {
+        font-size: 16px;
+    }
+    
+    .logo p {
+        font-size: 10px;
+    }
+    
+    nav ul li {
+        margin-left: 8px;
+    }
+    
+    nav ul li a {
+        font-size: 12px;
+    }
+    
+    #search-input {
+        width: 80px;
+    }
+    
+    #search-input:focus {
+        width: 120px;
+    }
+}
+
+@media (max-width: 768px) {
+    header .container {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    nav ul {
+        margin-top: 20px;
+    }
+
+    nav ul li {
+        margin-left: 0;
+        margin-right: 20px;
+    }
+
+    .hero-content h2 {
+        font-size: 32px;
+    }
+
+    .features {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .feature-item {
+        margin-bottom: 20px;
+        width: 100%;
+    }
+
+    .map-container {
+        flex-direction: column;
+    }
+
+    .map-placeholder {
+        min-width: 100%;
+    }
+    
+    .map-container-amap {
+        min-width: 100%;
+        height: 400px;
+    }
+
+    .about-content {
+        flex-direction: column;
+    }
+
+    .footer-content {
+        flex-direction: column;
+    }
+    
+    .page-header {
+        padding: 80px 0;
+    }
+    
+    .page-header h1 {
+        font-size: 28px;
+    }
+    
+    .page-header p {
+        font-size: 16px;
+    }
+    
+    .method-item,
+    .route-section,
+    .branch-item,
+    .node-item,
+    .result-item,
+    .timeline-event,
+    .event-card,
+    .analysis-item,
+    .significance-item,
+    .type-card,
+    .region-section,
+    .value-item,
+    .protection-item,
+    .utilization-item {
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .btn-primary {
+        padding: 12px 28px;
+        font-size: 14px;
+    }
+    
+    .btn-secondary {
+        padding: 10px 20px;
+        font-size: 13px;
+    }
+    
+    .explore-content {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .explore-item {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    
+    .culture-intro-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .culture-intro-item {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    
+    .travel-intro-content {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .travel-intro-item {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    
+    .category-grid {
+        grid-template-columns: 1fr;
+        max-width: 100%;
+    }
+    
+    .document-list {
+        grid-template-columns: 1fr;
+    }
+    
+    .digitization-features {
+        flex-direction: column;
+    }
+    
+    .digitization-features .feature-item {
+        min-width: 100%;
+    }
+    
+    .data-source-list {
+        grid-template-columns: 1fr;
+    }
+    
+    .analysis-features {
+        grid-template-columns: 1fr;
+    }
+    
+    .application-cases {
+        grid-template-columns: 1fr;
+    }
+    
+    .archaeology-item {
+        flex-direction: column;
+    }
+    
+    .archaeology-image {
+        min-width: 100%;
+    }
+    
+    .archaeology-info {
+        min-width: 100%;
+    }
+    
+    .image-gallery {
+        grid-template-columns: 1fr;
+    }
+    
+    .image-collections {
+        grid-template-columns: 1fr;
+    }
+    
+    .culture-items {
+        grid-template-columns: 1fr;
+    }
+    
+    .book-visualization {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .book-cover {
+        flex: 0 0 auto;
+    }
+    
+    .book-contents {
+        min-width: 100%;
+    }
+    
+    .video-section {
+        padding: 60px 0;
+    }
+    
+    .video-section h2 {
+        font-size: 24px;
+    }
+    
+    .video-container {
+        max-width: 100%;
+        margin: 0 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero {
+        padding: 80px 0;
+    }
+
+    .hero-content h2 {
+        font-size: 24px;
+    }
+
+    .intro,
+    .map-section,
+    .dataset-section,
+    .about-section {
+        padding: 60px 0;
+    }
+
+    .intro h2,
+    .map-section h2,
+    .dataset-section h2,
+    .about-section h2 {
+        font-size: 24px;
+    }
+    
+    .page-header {
+        padding: 60px 0;
+    }
+    
+    .page-header h1 {
+        font-size: 24px;
+    }
+    
+    .page-header p {
+        font-size: 14px;
+        padding: 0 15px;
+    }
+    
+    .method-item,
+    .route-section,
+    .branch-item,
+    .node-item,
+    .result-item,
+    .timeline-event,
+    .event-card,
+    .analysis-item,
+    .significance-item,
+    .type-card,
+    .region-section,
+    .value-item,
+    .protection-item,
+    .utilization-item {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .btn-primary {
+        padding: 10px 24px;
+        font-size: 13px;
+    }
+    
+    .btn-secondary {
+        padding: 8px 16px;
+        font-size: 12px;
+    }
+    
+    .container {
+        padding: 0 15px;
+    }
+    
+    .video-section {
+        padding: 40px 0;
+    }
+    
+    .video-section h2 {
+        font-size: 20px;
+    }
+    
+    .video-container {
+        margin: 0 15px;
+    }
+}

@@ -1,0 +1,138 @@
+/* 文化内涵简介板块样式 */
+.culture-intro-section {
+    padding: 100px 0;
+    background-color: #f9f9f9;
+    text-align: center;
+}
+
+.culture-intro-section h2 {
+    font-size: 32px;
+    color: #8B4513;
+    margin-bottom: 20px;
+}
+
+.culture-intro-section p {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 60px;
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+}
+
+.culture-intro-content {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    margin-bottom: 60px;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.culture-intro-item {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(139, 69, 19, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    min-height: 200px;
+}
+
+.culture-intro-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(139, 69, 19, 0.1);
+}
+
+.culture-intro-item i {
+    font-size: 32px;
+    color: #8B4513;
+    margin-bottom: 20px;
+}
+
+.culture-intro-item h3 {
+    font-size: 18px;
+    color: #8B4513;
+    margin-bottom: 10px;
+}
+
+.culture-intro-item p {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 0;
+}
+
+/* 文化内涵页面样式 */
+.culture-section {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(139, 69, 19, 0.1);
+    margin-bottom: 40px;
+    border: 1px solid rgba(139, 69, 19, 0.1);
+}
+
+.culture-section h2 {
+    font-size: 24px;
+    color: #8B4513;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.culture-section h2 i {
+    font-size: 20px;
+}
+
+.culture-content p {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 25px;
+    line-height: 1.6;
+}
+
+.culture-items {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.culture-item {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    border-left: 4px solid #8B4513;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.culture-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(139, 69, 19, 0.1);
+}
+
+.culture-item h3 {
+    font-size: 18px;
+    color: #8B4513;
+    margin-bottom: 10px;
+}
+
+.culture-item p {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 0;
+}
+
+/* 知识图谱样式 */
+.knowledge-graph {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.knowledge-graph img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(139, 69, 19, 0.1);
+}

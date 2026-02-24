@@ -1,0 +1,52 @@
+/* 数据集 */
+.dataset-section {
+    padding: 100px 0;
+    background-color: #fff;
+}
+
+.dataset-section h2 {
+    font-size: 32px;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #8B4513;
+}
+
+.dataset-section p {
+    font-size: 16px;
+    text-align: center;
+    margin-bottom: 60px;
+    color: #666;
+}
+
+.dataset-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.dataset-item {
+    background-color: #f9f9f9;
+    padding: 30px;
+    border-radius: 8px;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.dataset-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(139, 69, 19, 0.1);
+}
+
+.dataset-item h3 {
+    font-size: 20px;
+    margin-bottom: 15px;
+    color: #8B4513;
+}
+
+.dataset-item p {
+    font-size: 14px;
+    margin-bottom: 20px;
+    text-align: left;
+    color: #666;
+}

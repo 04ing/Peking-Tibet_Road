@@ -1,0 +1,61 @@
+/* 平台介绍 */
+.intro {
+    padding: 100px 0;
+    background-color: #fff;
+}
+
+.intro h2 {
+    font-size: 32px;
+    text-align: center;
+    margin-bottom: 40px;
+    color: #8B4513;
+}
+
+.intro p {
+    font-size: 16px;
+    text-align: center;
+    margin-bottom: 60px;
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+    color: #666;
+}
+
+.features {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.feature-item {
+    flex: 1;
+    min-width: 250px;
+    text-align: center;
+    padding: 30px;
+    margin: 0 10px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.feature-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(139, 69, 19, 0.1);
+}
+
+.feature-item i {
+    font-size: 48px;
+    color: #8B4513;
+    margin-bottom: 20px;
+}
+
+.feature-item h3 {
+    font-size: 20px;
+    margin-bottom: 15px;
+    color: #8B4513;
+}
+
+.feature-item p {
+    font-size: 14px;
+    color: #666;
+}
