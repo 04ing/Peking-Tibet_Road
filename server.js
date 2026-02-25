@@ -26,10 +26,8 @@ mongoose.connect(process.env.MONGODB_URI)
 
 // 注册路由
 const authRoutes = require('./routes/auth');
-const apiRoutes = require('./routes/api');
 
 app.use('/api/auth', authRoutes);
-app.use('/api', apiRoutes);
 
 // 静态文件服务（用于前端文件）
 app.use(express.static(__dirname));

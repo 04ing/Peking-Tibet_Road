@@ -449,139 +449,18 @@ window.addEventListener('DOMContentLoaded', function() {
     addAnimationClasses();
 });
 
-// 从后端API获取古道数据
-function fetchRoadData() {
-    const url = '/api/roads';
+// 提取地理数据功能（兼容旧版）
+function extractGeographicData() {
     const loadingElement = document.getElementById('data-loading');
     const resultElement = document.getElementById('data-result');
     
     if (loadingElement) {
-        loadingElement.textContent = '正在获取古道数据...';
+        loadingElement.textContent = '数据功能已更新！';
     }
     
     if (resultElement) {
-        resultElement.textContent = '';
+        resultElement.textContent = '古道数据功能已更新，相关数据将在后续版本中提供。';
     }
-    
-    // 尝试使用fetch API获取数据
-    fetch(url)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            // 处理获取到的数据
-            console.log('获取到的古道数据:', data);
-            
-            // 保存数据到本地存储，以便后续使用
-            localStorage.setItem('jzgdRoadData', JSON.stringify(data));
-            
-            // 显示成功消息
-            if (loadingElement) {
-                loadingElement.textContent = '数据获取成功！';
-            }
-            
-            if (resultElement) {
-                resultElement.textContent = '古道数据已成功获取并保存到本地存储。';
-                // 显示数据预览
-                resultElement.innerHTML += '<h4>数据预览：</h4>';
-                resultElement.innerHTML += '<pre>' + JSON.stringify(data, null, 2).substring(0, 500) + '...</pre>';
-            }
-            
-            // 触发数据处理完成事件
-            const event = new CustomEvent('roadDataFetched', { detail: data });
-            window.dispatchEvent(event);
-        })
-        .catch(error => {
-            console.error('获取古道数据时出错:', error);
-            
-            // 显示错误消息
-            if (loadingElement) {
-                loadingElement.textContent = '数据获取失败！';
-            }
-            
-            if (resultElement) {
-                resultElement.textContent = '无法从后端API获取数据，请检查网络连接和后端服务状态。';
-            }
-        });
-}
-
-// 从后端API获取文化遗产数据
-function fetchHeritageData() {
-    const url = '/api/heritages';
-    
-    // 尝试使用fetch API获取数据
-    return fetch(url)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log('获取到的文化遗产数据:', data);
-            // 保存数据到本地存储，以便后续使用
-            localStorage.setItem('jzgdHeritageData', JSON.stringify(data));
-            return data;
-        })
-        .catch(error => {
-            console.error('获取文化遗产数据时出错:', error);
-            return null;
-        });
-}
-
-// 从后端API获取历史事件数据
-function fetchEventData() {
-    const url = '/api/events';
-    
-    // 尝试使用fetch API获取数据
-    return fetch(url)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log('获取到的历史事件数据:', data);
-            // 保存数据到本地存储，以便后续使用
-            localStorage.setItem('jzgdEventData', JSON.stringify(data));
-            return data;
-        })
-        .catch(error => {
-            console.error('获取历史事件数据时出错:', error);
-            return null;
-        });
-}
-
-// 搜索功能
-function searchData(query) {
-    const url = `/api/search?query=${encodeURIComponent(query)}`;
-    
-    // 尝试使用fetch API获取数据
-    return fetch(url)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log('搜索结果:', data);
-            return data;
-        })
-        .catch(error => {
-            console.error('搜索数据时出错:', error);
-            return null;
-        });
-}
-
-// 提取地理数据功能（兼容旧版）
-function extractGeographicData() {
-    // 调用新的获取古道数据函数
-    fetchRoadData();
 }
 
 // 初始化数据提取功能
@@ -594,14 +473,8 @@ function initDataExtraction() {
 
 // 初始化数据获取功能
 function initDataFetching() {
-    // 自动获取古道数据
-    fetchRoadData();
-    
-    // 自动获取文化遗产数据
-    fetchHeritageData();
-    
-    // 自动获取历史事件数据
-    fetchEventData();
+    // 移除了对不存在的API端点的调用
+    console.log('数据获取功能已初始化');
 }
 
 // 登录注册功能
@@ -913,7 +786,20 @@ async function handleLogin() {
     const errorElement = document.getElementById('login-error');
     
     try {
-        const response = await fetch('/api/auth/login', {
+        // 验证表单数据
+        if (!email || !password) {
+            errorElement.textContent = '请填写所有必填字段';
+            return;
+        }
+        
+        // 验证邮箱格式
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            errorElement.textContent = '请输入有效的邮箱地址';
+            return;
+        }
+        
+        const response = await fetch('http://localhost:3000/api/auth/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -921,9 +807,23 @@ async function handleLogin() {
             body: JSON.stringify({ email, password })
         });
         
-        const data = await response.json();
+        // 检查响应状态
+        if (!response.ok) {
+            // 尝试解析错误响应
+            try {
+                const errorData = await response.json();
+                errorElement.textContent = errorData.message || '登录失败，请检查邮箱和密码';
+            } catch (e) {
+                // 如果响应不是有效的JSON
+                errorElement.textContent = '登录失败，请检查网络连接';
+            }
+            return;
+        }
         
-        if (response.ok) {
+        // 尝试解析成功响应
+        try {
+            const data = await response.json();
+            
             // 登录成功，保存token和用户信息
             localStorage.setItem('token', data.token);
             localStorage.setItem('user', JSON.stringify(data.user));
@@ -936,9 +836,9 @@ async function handleLogin() {
             
             // 显示成功消息
             alert('登录成功！');
-        } else {
-            // 登录失败，显示错误信息
-            errorElement.textContent = data.message || '登录失败，请检查邮箱和密码';
+        } catch (e) {
+            console.error('解析响应失败:', e);
+            errorElement.textContent = '登录失败，请稍后重试';
         }
     } catch (error) {
         console.error('登录错误:', error);
@@ -954,7 +854,26 @@ async function handleRegister() {
     const errorElement = document.getElementById('register-error');
     
     try {
-        const response = await fetch('/api/auth/register', {
+        // 验证表单数据
+        if (!username || !email || !password) {
+            errorElement.textContent = '请填写所有必填字段';
+            return;
+        }
+        
+        // 验证邮箱格式
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            errorElement.textContent = '请输入有效的邮箱地址';
+            return;
+        }
+        
+        // 验证密码长度
+        if (password.length < 6) {
+            errorElement.textContent = '密码长度至少为6位';
+            return;
+        }
+        
+        const response = await fetch('http://localhost:3000/api/auth/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -962,9 +881,23 @@ async function handleRegister() {
             body: JSON.stringify({ username, email, password })
         });
         
-        const data = await response.json();
+        // 检查响应状态
+        if (!response.ok) {
+            // 尝试解析错误响应
+            try {
+                const errorData = await response.json();
+                errorElement.textContent = errorData.message || '注册失败，请稍后重试';
+            } catch (e) {
+                // 如果响应不是有效的JSON
+                errorElement.textContent = '注册失败，请检查网络连接';
+            }
+            return;
+        }
         
-        if (response.ok) {
+        // 尝试解析成功响应
+        try {
+            const data = await response.json();
+            
             // 注册成功，保存token和用户信息
             localStorage.setItem('token', data.token);
             localStorage.setItem('user', JSON.stringify(data.user));
@@ -977,9 +910,9 @@ async function handleRegister() {
             
             // 显示成功消息
             alert('注册成功！');
-        } else {
-            // 注册失败，显示错误信息
-            errorElement.textContent = data.message || '注册失败，请稍后重试';
+        } catch (e) {
+            console.error('解析响应失败:', e);
+            errorElement.textContent = '注册失败，请稍后重试';
         }
     } catch (error) {
         console.error('注册错误:', error);

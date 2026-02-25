@@ -20,6 +20,20 @@
 
 ## 最新更新
 
+- **2026-02-25**：后端服务实现和前端功能优化
+  - 实现了基于 Node.js 和 Express.js 的后端服务
+  - 添加了用户注册和登录功能，使用 JWT 进行身份认证
+  - 优化了前端搜索功能，修复了模板加载导致的搜索元素不存在问题
+  - 改进了后端错误处理，避免数据库操作超时错误
+  - 使用内存存储实现了用户信息的临时存储
+
+- **2026-02-24**：CSS 优化和模块化
+  - 将大型 style.css 文件拆分为多个小型模块化 CSS 文件
+  - 按功能模块组织 CSS（base.css, navbar.css, hero.css, intro.css 等）
+  - 移除了重复的 CSS 代码
+  - 修复了导航栏样式，将搜索框移动到最右侧
+  - 优化了响应式设计
+
 - **2026-02-24**：SEO 优化和链接结构改进
   - 为所有 HTML 页面添加独特的 meta 标签（标题、描述、关键词）
   - 优化页面间的内部链接结构，确保链接路径正确
@@ -72,6 +86,8 @@
 ## 技术栈
 
 - **前端**：HTML5, CSS3, JavaScript
+- **后端**：Node.js, Express.js
+- **认证**：JWT (JSON Web Token)
 - **地图可视化**：Leaflet.js, 高德地图 API
 - **数据可视化**：D3.js
 - **时间轴可视化**：Vis.js
@@ -100,12 +116,31 @@
 │   └── *.mp4               # MP4 文件
 ├── css/                    # 样式文件
 │   ├── style.css           # 主样式文件
+│   ├── base.css            # 基础样式
+│   ├── navbar.css          # 导航栏样式
+│   ├── hero.css            # 英雄区域样式
+│   ├── intro.css           # 介绍区域样式
+│   ├── explore.css         # 探索区域样式
+│   ├── map.css             # 地图区域样式
+│   ├── dataset.css         # 数据集样式
+│   ├── culture.css         # 文化内涵样式
 │   ├── travel.css          # 旅游攻略页面样式
+│   ├── travel-new.css      # 新旅游攻略样式
 │   ├── heritage.css        # 线性文化遗产页面样式
 │   ├── timeline.css        # 时间轴样式
-│   └── pdf-viewer.css      # PDF 查看器样式
+│   ├── pdf-viewer.css      # PDF 查看器样式
+│   ├── animation.css       # 动画效果样式
+│   ├── video.css           # 视频样式
+│   └── responsive.css      # 响应式设计样式
 ├── js/                     # JavaScript 文件
-│   └── main.js             # 主脚本文件
+│   ├── main.js             # 主脚本文件
+│   └── template-loader.js  # 模板加载脚本
+├── templates/              # 模板文件
+│   └── navbar.html         # 导航栏模板
+├── routes/                 # 后端路由
+│   └── auth.js             # 认证路由
+├── models/                 # 数据模型
+│   └── User.js             # 用户模型
 ├── json/                   # JSON 数据文件
 │   ├── route-data.json     # 路线数据
 │   ├── cultural-relics.json # 文化遗产数据
@@ -114,7 +149,9 @@
 │   ├── 古墓.png            # 古墓葬图标
 │   ├── 0a8b2cf28f9e7b68642454ee9cb2562c_c4c938cb-954f-495e-9860-cd1097844177.jpg
 │   └── f7e2361cc2156a23ae21dbc11f3a85db_14d3d4ea-b6e3-4929-8d3c-86092c9e7f76.jpg
+├── server.js               # 后端服务器文件
 ├── package.json            # 项目配置文件
+├── .env                    # 环境变量文件
 ├── .gitignore              # Git 忽略文件
 └── README.md               # 项目说明文件
 ```
@@ -168,7 +205,28 @@
    http://localhost:8000
    ```
 
-### 方法三：使用 VS Code 扩展
+### 方法三：使用项目自带的 Node.js 后端服务
+
+1. 确保已安装 Node.js
+
+2. 安装项目依赖
+   ```bash
+   npm install
+   ```
+
+3. 启动后端服务器
+   ```bash
+   node server.js
+   ```
+
+4. 在浏览器中访问
+   ```
+   http://localhost:3000
+   ```
+
+   后端服务会同时提供前端静态文件和 API 接口，包括用户注册和登录功能。
+
+### 方法四：使用 VS Code 扩展
 
 1. 在 VS Code 中安装 "Live Server" 扩展
 
